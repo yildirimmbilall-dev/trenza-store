@@ -20,34 +20,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Prepare site visuals
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          p = Path("public/index.html")
-          s = p.read_text(encoding="utf-8")
-
-          # Remove the unavailable/fictitious store-style image from the editorial section.
-          s = re.sub(r'<figure class="tile big">.*?</figure>', '', s, count=1, flags=re.S)
-
-          # Keep the remaining two genuine visuals balanced on desktop.
-          s = s.replace(
-              '<div class="editorial reveal">',
-              '<div class="editorial editorial-clean reveal">',
-              1,
-          )
-
-          s = s.replace(
-              '</style></head>',
-              '.editorial-clean{grid-template-columns:1fr 1fr}.editorial-clean .tile.small{min-height:520px}\n</style></head>',
-              1,
-          )
-
-          p.write_text(s, encoding="utf-8")
-          PY
-
       - name: Install dependencies
         run: npm install
 
