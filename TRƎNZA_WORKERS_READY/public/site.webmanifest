@@ -1,0 +1,14 @@
+{
+  "name": "TRƎNZA — Handcrafted Bags",
+  "short_name": "TRƎNZA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eee7df",
+  "theme_color": "#211812",
+  "icons": [
+    {"src":"/assets/logo.svg","sizes":"any","type":"image/svg+xml"},
+    {"src":"/assets/icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"/assets/icon-512.png","sizes":"512x512","type":"image/png"},
+    {"src":"/assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ]
+}
