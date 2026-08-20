@@ -1,6 +1,6 @@
 {
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
-  "name": "trenza-prelaunch",
+  "name": "trenza-store",
   "main": "./worker/index.js",
   "compatibility_date": "2026-08-20",
   "workers_dev": true,
