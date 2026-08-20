@@ -45,8 +45,7 @@ window.TRENZA_COMMERCE = {
   document.head.appendChild(css);
 })();
 
-/* PRE-LAUNCH HERO: replace only the removed storefront/interior photograph.
-   All collection/product visuals below remain untouched. */
+/* PRE-LAUNCH HERO: replace only the removed storefront/interior photograph. */
 (function(){
   const css = document.createElement('style');
   css.textContent = `
