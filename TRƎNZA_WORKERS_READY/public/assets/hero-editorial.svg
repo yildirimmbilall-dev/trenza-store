@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#100a07"/><stop offset=".48" stop-color="#21140e"/><stop offset="1" stop-color="#38251a"/></linearGradient>
+  <radialGradient id="light" cx="76%" cy="45%" r="55%"><stop offset="0" stop-color="#8c5d37" stop-opacity=".32"/><stop offset=".48" stop-color="#4b2e1d" stop-opacity=".12"/><stop offset="1" stop-color="#100a07" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b642d"/><stop offset=".28" stop-color="#f1d49a"/><stop offset=".52" stop-color="#a87832"/><stop offset=".75" stop-color="#f5dca8"/><stop offset="1" stop-color="#765021"/></linearGradient>
+  <pattern id="weave" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(8)">
+    <path d="M-4 4 L26 4 M-4 11 L26 11 M-4 18 L26 18" stroke="#9b6b43" stroke-opacity=".12" stroke-width="5"/>
+    <path d="M4 -4 L4 26 M11 -4 L11 26 M18 -4 L18 26" stroke="#050302" stroke-opacity=".14" stroke-width="4"/>
+  </pattern>
+  <filter id="blur"><feGaussianBlur stdDeviation="35"/></filter>
+  <filter id="shadow"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".65"/></filter>
+</defs>
+<rect width="1536" height="1024" fill="url(#bg)"/>
+<ellipse cx="1200" cy="390" rx="500" ry="430" fill="#9b6539" opacity=".13" filter="url(#blur)"/>
+<path d="M820 1024 C850 760 1010 520 1210 360 C1320 272 1450 220 1600 190 L1600 1040 Z" fill="#6b4429" opacity=".34"/>
+<path d="M820 1024 C910 760 1090 540 1270 410 C1390 322 1500 292 1600 280 L1600 1040 Z" fill="url(#weave)" opacity=".82"/>
+<path d="M-60 980 C150 780 310 650 520 570 C690 505 850 500 1000 555 C850 690 720 820 650 1050 L-60 1050Z" fill="#080504" opacity=".72"/>
+<path d="M-30 870 C210 700 420 625 655 635 C785 641 895 680 1000 745" fill="none" stroke="#a67549" stroke-opacity=".16" stroke-width="105" stroke-linecap="round"/>
+<path d="M-30 870 C210 700 420 625 655 635 C785 641 895 680 1000 745" fill="none" stroke="url(#weave)" stroke-width="76" stroke-linecap="round"/>
+<rect width="1536" height="1024" fill="url(#light)"/>
+<rect width="1536" height="1024" fill="url(#weave)" opacity=".22"/>
+<g transform="translate(1135 560) rotate(-13)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)">
+  <path d="M0-145 C-65-145-92-105-68-66 C-48-33 20-38 46-5 C74 31 42 76-10 76 C-61 76-90 39-86 0" stroke-width="25"/>
+  <path d="M10-145 C75-145 102-105 78-66 C58-33-10-38-36-5 C-64 31-32 76 20 76 C71 76 100 39 96 0" stroke-width="25"/>
+  <path d="M-40-165 L40-165 M-53 112 L53 112" stroke-width="14" opacity=".9"/>
+</g>
+<rect width="1536" height="1024" fill="#000" opacity=".12"/>
+</svg>
