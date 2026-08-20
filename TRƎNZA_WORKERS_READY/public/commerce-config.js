@@ -45,9 +45,23 @@ window.TRENZA_COMMERCE = {
   document.head.appendChild(css);
 })();
 
-/* PRE-LAUNCH: hide only the storefront/interior hero photograph. Keep all editorial/product visuals. */
+/* PRE-LAUNCH HERO: replace only the removed storefront/interior photograph.
+   All collection/product visuals below remain untouched. */
 (function(){
   const css = document.createElement('style');
-  css.textContent = '.hero picture{display:none !important;} .hero{background:var(--espresso) !important;}';
+  css.textContent = `
+    .hero picture{display:none !important;}
+    .hero > .hero-media{display:none !important;}
+    .hero{
+      background-color:var(--espresso) !important;
+      background-image:url('assets/hero-editorial.svg') !important;
+      background-size:cover !important;
+      background-position:center center !important;
+      background-repeat:no-repeat !important;
+    }
+    @media(max-width:680px){
+      .hero{background-position:62% center !important;}
+    }
+  `;
   document.head.appendChild(css);
 })();
