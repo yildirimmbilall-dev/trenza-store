@@ -44,3 +44,10 @@ window.TRENZA_COMMERCE = {
   `;
   document.head.appendChild(css);
 })();
+
+/* PRE-LAUNCH: hide only the storefront/interior hero photograph. Keep all editorial/product visuals. */
+(function(){
+  const css = document.createElement('style');
+  css.textContent = '.hero picture{display:none !important;} .hero{background:var(--espresso) !important;}';
+  document.head.appendChild(css);
+})();
