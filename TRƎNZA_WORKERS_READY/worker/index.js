@@ -32,14 +32,12 @@ export default {
       return notFound();
     }
 
-    // Keep the existing HTML untouched, but serve the approved TRƎNZA editorial
-    // hero artwork for both legacy hero URLs used by the page.
+    // Serve the real hero asset from /public/assets.
+    // Do not replace hero.jpg / hero.webp with the legacy editorial SVG.
     if (url.pathname === '/assets/hero.webp' || url.pathname === '/assets/hero.jpg') {
-      const heroUrl = new URL('/assets/hero-editorial.svg', request.url);
-      const response = await env.ASSETS.fetch(new Request(heroUrl, request));
+      const response = await env.ASSETS.fetch(request);
       const headers = new Headers(response.headers);
-      headers.set('content-type', 'image/svg+xml');
-      headers.set('cache-control', 'public, max-age=3600, s-maxage=86400');
+      headers.set('cache-control', 'no-cache, must-revalidate');
       return new Response(response.body, { status: response.status, headers });
     }
 
