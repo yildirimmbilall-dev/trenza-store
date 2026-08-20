@@ -21,3 +21,45 @@ window.TRENZA_COMMERCE = {
   checkoutEndpoint: null, // e.g. 'https://formspree.io/f/xxxxxxx'
   launchReady: false
 };
+
+/* Same-page navigation guard: internal section links never reload the site. */
+(function () {
+  function initTrenzaNavigation() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        var href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        var targetId = href.slice(1);
+        var target = document.getElementById(targetId);
+        if (!target) return;
+
+        event.preventDefault();
+
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, '', '#' + targetId);
+        } else {
+          window.location.hash = targetId;
+        }
+
+        var menu = document.getElementById('links');
+        var menuButton = document.getElementById('menu');
+        if (menu) menu.classList.remove('open');
+        if (menuButton) {
+          menuButton.textContent = '☰';
+          menuButton.setAttribute('aria-expanded', 'false');
+        }
+
+        requestAnimationFrame(function () {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTrenzaNavigation, { once: true });
+  } else {
+    initTrenzaNavigation();
+  }
+})();
