@@ -32,6 +32,17 @@ export default {
       return notFound();
     }
 
+    // Keep the existing HTML untouched, but serve the approved TRƎNZA editorial
+    // hero artwork for both legacy hero URLs used by the page.
+    if (url.pathname === '/assets/hero.webp' || url.pathname === '/assets/hero.jpg') {
+      const heroUrl = new URL('/assets/hero-editorial.svg', request.url);
+      const response = await env.ASSETS.fetch(new Request(heroUrl, request));
+      const headers = new Headers(response.headers);
+      headers.set('content-type', 'image/svg+xml');
+      headers.set('cache-control', 'public, max-age=3600, s-maxage=86400');
+      return new Response(response.body, { status: response.status, headers });
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
