@@ -1,0 +1,32 @@
+TRƎNZA FINAL BOSS QA — 20 Ağustos 2026
+
+STRUCTURE
+- index.html: OK
+- HTML parser: OK
+- JavaScript syntax: OK (Node --check)
+- Local asset references: 0 missing
+- Product cards: 10
+- Cart add buttons: 10
+- Commerce drawer/modal: present
+- commerce-config.js: present
+
+RESPONSIVE
+- Desktop: responsive grid + cart drawer
+- Tablet: 3-column product layout
+- Mobile: 2-column product layout + full-width cart/checkout
+- Reduced motion: supported
+
+COMMERCE
+- Local pre-registration cart: READY
+- Quantity controls: READY
+- Remove item: READY
+- Persistent cart via localStorage: READY
+- Pre-order info form: READY
+- Payment: NOT ACTIVE (merchant/payment provider credentials not supplied)
+
+LEGAL / LAUNCH BLOCKERS
+- Live sales require verified prices including taxes, seller identity/contact details, pre-information and distance-sales/withdrawal terms, and payment/shipping configuration.
+- Personal-data collection requires a proper KVKK disclosure tailored to the actual data controller and processing purposes.
+
+VISUALS
+- Product images and TRƎNZA branding assets were not altered in this technical pass.
