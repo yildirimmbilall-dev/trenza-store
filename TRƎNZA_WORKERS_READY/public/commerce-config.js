@@ -1,74 +1,33 @@
 /* TRƎNZA commerce configuration */
-window.TRENZA_COMMERCE = {
-  mode: 'preorder',
-  currency: null,
-  paymentProvider: null,
-  preRegisterEndpoint: '/api/pre-register',
-  preorderEndpoint: '/api/preorder',
-  checkoutEndpoint: '/api/preorder',
-  launchReady: false
-};
+window.TRENZA_COMMERCE={mode:'preorder',currency:null,paymentProvider:null,preRegisterEndpoint:'/api/pre-register',preorderEndpoint:'/api/preorder',checkoutEndpoint:'/api/preorder',launchReady:false};
 
-/* Same-page navigation. */
 (function(){
-  function init(){
-    document.querySelectorAll('a[href^="#"]').forEach(function(link){
-      link.addEventListener('click',function(e){
-        var href=link.getAttribute('href'); if(!href||href==='#')return;
-        var target=document.getElementById(href.slice(1)); if(!target)return;
-        e.preventDefault(); if(history.pushState)history.pushState(null,'',href); else location.hash=href.slice(1);
-        var menu=document.getElementById('links'),btn=document.getElementById('menu'); if(menu)menu.classList.remove('open'); if(btn)btn.setAttribute('aria-expanded','false');
-        requestAnimationFrame(function(){target.scrollIntoView({behavior:'smooth',block:'start'});});
-      });
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  function nav(){document.querySelectorAll('a[href^="#"]').forEach(function(link){link.addEventListener('click',function(e){var href=link.getAttribute('href');if(!href||href==='#')return;var target=document.getElementById(href.slice(1));if(!target)return;e.preventDefault();if(history.pushState)history.pushState(null,'',href);else location.hash=href.slice(1);var menu=document.getElementById('links'),btn=document.getElementById('menu');if(menu)menu.classList.remove('open');if(btn)btn.setAttribute('aria-expanded','false');requestAnimationFrame(function(){target.scrollIntoView({behavior:'smooth',block:'start'});});});});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nav,{once:true});else nav();
 })();
 
-/* Premium language switch styling + small legacy compatibility layer. */
 (function(){
   function init(){
-    if(!document.getElementById('trenza-lang-style')){var s=document.createElement('style');s.id='trenza-lang-style';s.textContent='.lang-switch{display:flex!important;align-items:center;gap:2px;padding:3px;border:1px solid rgba(216,191,151,.28)!important;border-radius:999px!important;background:rgba(18,11,7,.28)!important;backdrop-filter:blur(12px)}.lang-switch button{min-width:34px;height:28px;padding:0 9px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:rgba(247,238,228,.58)!important;font:600 9px DM Sans,sans-serif!important;letter-spacing:.14em!important}.lang-switch button.active{background:linear-gradient(180deg,#d8bf97,#c2a477)!important;color:#211812!important}';document.head.appendChild(s)}
-
+    if(!document.getElementById('trenza-lang-style')){var s=document.createElement('style');s.id='trenza-lang-style';s.textContent='.lang-switch{display:flex!important;align-items:center;gap:2px;padding:3px;border:1px solid rgba(216,191,151,.28)!important;border-radius:999px!important;background:rgba(18,11,7,.28)!important;backdrop-filter:blur(12px)}.lang-switch button{min-width:34px;height:28px;padding:0 9px!important;border:0!important;border-radius:999px!important;background:transparent!important;color:rgba(247,238,228,.58)!important;font:600 9px DM Sans,sans-serif!important;letter-spacing:.14em!important}.lang-switch button.active{background:linear-gradient(180deg,#d8bf97,#c2a477)!important;color:#211812!important}.consent{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:10px;line-height:1.6;color:#9f8d7f;text-align:left}.consent input{width:16px;height:16px;margin:1px 0 0;accent-color:#c2a477;flex:0 0 auto}';document.head.appendChild(s)}
     var early=document.getElementById('earlyForm');
-    if(early&&!early.querySelector('[data-trenza-consent]')){
-      var wrap=document.createElement('div');wrap.className='consent';wrap.style.cssText='display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:10px;line-height:1.6;color:#9f8d7f;text-align:left';
-      wrap.innerHTML='<input data-trenza-consent id="legacyEarlyConsent" name="consent" type="checkbox" required style="width:16px;height:16px;margin:1px 0 0;accent-color:#c2a477"><label for="legacyEarlyConsent" style="cursor:pointer">Ön kayıt ve bilgilendirme talebim için bilgilerimin kullanılmasını kabul ediyorum.</label>';
-      var button=early.querySelector('button[type="submit"]'); early.insertBefore(wrap,button);
-    }
+    if(early&&!early.querySelector('[data-trenza-consent]')){var wrap=document.createElement('div');wrap.className='consent';wrap.innerHTML='<input data-trenza-consent id="legacyEarlyConsent" name="consent" type="checkbox" required><label for="legacyEarlyConsent">Ön kayıt ve bilgilendirme talebim için bilgilerimin kullanılmasını kabul ediyorum.</label>';var button=early.querySelector('button[type="submit"]');if(button)early.insertBefore(wrap,button)}
+    var checkout=document.getElementById('checkoutForm');
+    if(checkout&&!checkout.querySelector('[data-trenza-checkout-consent]')){var wrap2=document.createElement('div');wrap2.className='consent';wrap2.innerHTML='<input data-trenza-checkout-consent id="legacyCheckoutConsent" name="consent" type="checkbox" required><label for="legacyCheckoutConsent">Ön sipariş ve bilgilendirme talebim için bilgilerimin kullanılmasını kabul ediyorum.</label>';var actions=checkout.querySelector('.modal-actions');if(actions)checkout.insertBefore(wrap2,actions)}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 
-/* Legacy index compatibility: inject consent into the JSON payload sent by the old inline form handler. */
 (function(){
-  var originalFetch=window.fetch;
-  if(!originalFetch||window.__trenzaFetchShim)return; window.__trenzaFetchShim=true;
-  window.fetch=function(input,init){
-    try{
-      if(init&&typeof init.body==='string'){
-        var payload=JSON.parse(init.body);
-        if(payload&&payload.type==='early-access'){
-          var checkbox=document.getElementById('legacyEarlyConsent')||document.getElementById('earlyConsent');
-          payload.consent=!!(checkbox&&checkbox.checked);
-          payload.language=(localStorage.getItem('trenza-lang')||'tr');
-          init=Object.assign({},init,{body:JSON.stringify(payload)});
-        }
-      }
-    }catch(e){}
-    return originalFetch.call(this,input,init);
-  };
+  var originalFetch=window.fetch;if(!originalFetch||window.__trenzaFetchShim)return;window.__trenzaFetchShim=true;
+  window.fetch=function(input,init){try{if(init&&typeof init.body==='string'){var payload=JSON.parse(init.body);if(payload&&payload.type==='early-access'){var c=document.getElementById('legacyEarlyConsent')||document.getElementById('earlyConsent');payload.consent=!!(c&&c.checked);payload.language=localStorage.getItem('trenza-lang')||'tr';init=Object.assign({},init,{body:JSON.stringify(payload)});}if(payload&&payload.type==='preorder'){var cc=document.getElementById('legacyCheckoutConsent')||document.getElementById('checkoutConsent');payload.consent=!!(cc&&cc.checked);payload.language=localStorage.getItem('trenza-lang')||'tr';if(typeof payload.items==='string'){payload.items=payload.items.split(',').map(function(part){var m=part.trim().match(/^(.*?)\s+x(\d+)$/i);return m?{product:m[1].trim(),quantity:Number(m[2])}:null}).filter(Boolean)}init=Object.assign({},init,{body:JSON.stringify(payload)})}}catch(e){}return originalFetch.call(this,input,init)};
 })();
 
-/* Preserve the premium cord wording. */
 (function(){
-  function apply(lang){var en=lang==='en';document.querySelectorAll('[data-i18n="d2_title"]').forEach(function(el){el.textContent=en?'PREMIUM CORD':'PREMIUM KORDON'});document.querySelectorAll('[data-i18n="d2_p"]').forEach(function(el){el.textContent=en?'High-quality, shape-retaining premium cord yarns are used.':'Yüksek kaliteli, şekil tutan premium kordon iplikler kullanılır.'})}
-  function bind(){apply(localStorage.getItem('trenza-lang')||'tr');document.querySelectorAll('[data-lang]').forEach(function(btn){btn.addEventListener('click',function(){setTimeout(function(){apply(btn.dataset.lang)},0)},{once:false})})}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-})();
-
-/* Product keyboard accessibility. */
-(function(){
-  function init(){document.querySelectorAll('.product').forEach(function(card){card.tabIndex=0;card.setAttribute('role','button');if(!card.getAttribute('aria-label'))card.setAttribute('aria-label',(card.dataset.product||'')+' — detayları gör')})}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();setTimeout(init,700);
+  var tr={nav_collection:'Koleksiyon',nav_atelier:'Atelier',nav_details:'Detaylar',nav_guide:'Ölçüler',nav_early:'Ön Kayıt',cart:'Sepet',add:'ÖN KAYIT SEPETİNE EKLE',tile1:'Signature collection',tile1b:'EL EMEĞİ, ZAMANSIZ ŞIKLIK.',tile2:'Series II',tile2b:'YENİ FORMLAR.',tile3:'Atelier',tile3b:'DETAYLARDA İMZA.',catAll:'Tümü',catEveryday:'Günlük',catEvening:'Akşam',catStatement:'Statement',catShoulder:'Omuz',series:'Series II',seriesTitle:'ARIA · ÉCLAT · NOVA · BAIA · VITA',storyK:'The atelier',storyT:'ELLERDEN ÇIKAN BİR İMZA.',storyP:'Her parça, dokunun karakterini koruyan yavaş ve özenli bir üretim anlayışıyla şekillenir. TRƎNZA için lüks; gösterişten önce malzeme, oran ve işçilikte saklıdır.',detailsK:'Made with intention',detailsT:'TRƎNZA DETAYLARI',detailsP:'Gösterişten çok malzemenin, formun ve işçiliğin konuştuğu bir marka dili.',d1:'EL EMEĞİ',d1p:'Her bir çanta, usta ellerin özenli işçiliğiyle üretilir.',d2:'PREMİUM KORDON',d2p:'Yüksek kaliteli, şekil tutan premium kordon iplikler kullanılır.',d3:'ZAMANSIZ TASARIM',d3p:'Tekrar tekrar kullanılabilecek sade ve güçlü siluetler.',d4:'ÖZENLİ SUNUM',d4p:'Her sipariş özel paketleme ile marka deneyiminin bir parçası olur.',guideK:'ÖLÇÜ & ÖLÇEK',guideT:'DOĞRU FORMU BUL.',guideP:'Her modelin ölçüsünü, ağırlığını ve kullanım alanını satın almadan önce net şekilde görebilmen için ölçü rehberimizi hazırladık.',guideN:'Ölçüler üretim tekniğine bağlı olarak yaklaşık 1–2 cm değişebilir.',earlyK:'Coming Soon · Ön Kayıt',earlyT:'İLK KOLEKSİYONU<br>İLK SEN GÖR.',earlyP:'Satış henüz açılmadı. Üretim ve şirket kuruluşu tamamlandığında öncelikli bilgilendirme ve erken erişim için listeye katıl. Mağaza yok — doğrudan markadan.',earlyBtn:'Ön kayıta katıl',earlyFine:"Formu gönderdiğinde kaydın doğrudan TRƎNZA'ya ulaşır.",cartTitle:'ÖN KAYIT SEPETİ',cartNote:'Bu aşamada ödeme alınmaz. Sepet sadece ön kayıt içindir. Satış açıldığında seçtiğin modelleri öncelikli olarak tamamlayabileceksin.',cartCheckout:'ÖN SİPARİŞ BİLGİLERİNE GEÇ',checkoutT:'ÖN SİPARİŞE HAZIRLAN',checkoutP:'Seçtiğin modelleri kayda alalım. Satış açıldığında sana öncelikli olarak ulaşabilelim. Şu anda ödeme alınmaz.',checkoutCancel:'Vazgeç',checkoutSubmit:'TALEBİ GÖNDER',footerCollection:'Koleksiyon',footerGuide:'Ölçüler',footerEarly:'Ön Kayıt',footerTag:'HANDCRAFTED BAGS · 2026 · ÇOK YAKINDA',consentEarly:'Ön kayıt ve bilgilendirme talebim için bilgilerimin kullanılmasını kabul ediyorum.',consentCheckout:'Ön sipariş ve bilgilendirme talebim için bilgilerimin kullanılmasını kabul ediyorum.'};
+  var en={nav_collection:'Collection',nav_atelier:'Atelier',nav_details:'Details',nav_guide:'Size Guide',nav_early:'Pre-register',cart:'Cart',add:'ADD TO PRE-ORDER',tile1:'Signature collection',tile1b:'HANDCRAFTED, TIMELESS ELEGANCE.',tile2:'Series II',tile2b:'NEW FORMS.',tile3:'Atelier',tile3b:'DETAILS AS A SIGNATURE.',catAll:'All',catEveryday:'Everyday',catEvening:'Evening',catStatement:'Statement',catShoulder:'Shoulder',series:'Series II',seriesTitle:'ARIA · ÉCLAT · NOVA · BAIA · VITA',storyK:'The atelier',storyT:'A SIGNATURE MADE BY HAND.',storyP:'Each piece is shaped through a slow, careful process that preserves the character of the texture. For TRƎNZA, luxury lives in material, proportion and craftsmanship.',detailsK:'Made with intention',detailsT:'TRƎNZA DETAILS',detailsP:'A brand language where material, form and craftsmanship speak louder than ornament.',d1:'HANDCRAFTED',d1p:'Each bag is made with careful craftsmanship by skilled hands.',d2:'PREMIUM CORD',d2p:'Made with high-quality premium cord yarns designed to hold their shape.',d3:'TIMELESS DESIGN',d3p:'Clean, strong silhouettes designed to be worn again and again.',d4:'THOUGHTFUL PRESENTATION',d4p:'Every order is carefully packaged as part of the TRƎNZA experience.',guideK:'SIZE & SCALE',guideT:'FIND THE RIGHT FORM.',guideP:'We created this size guide so you can clearly review each model’s dimensions, weight and intended use before buying.',guideN:'Measurements may vary by approximately 1–2 cm depending on the production technique.',earlyK:'Coming Soon · Pre-register',earlyT:'SEE THE FIRST<br>COLLECTION FIRST.',earlyP:'Sales are not open yet. Join the list for priority updates and early access once production and company setup are complete. No store — direct from the brand.',earlyBtn:'Join pre-register',earlyFine:'Submitting this form sends your registration directly to TRƎNZA.',cartTitle:'PRE-ORDER CART',cartNote:'No payment is taken at this stage. The cart is only for pre-registration; once sales open, you can complete your selected models first.',cartCheckout:'CONTINUE TO PRE-ORDER DETAILS',checkoutT:'GET READY TO PRE-ORDER',checkoutP:'Let us save your selected models so we can reach you first when sales open. No payment is taken now.',checkoutCancel:'Cancel',checkoutSubmit:'SUBMIT REQUEST',footerCollection:'Collection',footerGuide:'Size Guide',footerEarly:'Pre-register',footerTag:'HANDCRAFTED BAGS · 2026 · COMING SOON',consentEarly:'I agree that my information may be used for my pre-registration and related updates.',consentCheckout:'I agree that my information may be used for my pre-order request and related updates.'};
+  function setText(sel,val,html){document.querySelectorAll(sel).forEach(function(el){if(html)el.innerHTML=val;else el.textContent=val})}
+  function applyExtra(lang){var t=lang==='en'?en:tr;setText('.navlinks a:nth-child(1)',t.nav_collection);setText('.navlinks a:nth-child(2)',t.nav_atelier);setText('.navlinks a:nth-child(3)',t.nav_details);setText('.navlinks a:nth-child(4)',t.nav_guide);setText('.navlinks a:nth-child(5)',t.nav_early);setText('#cartBtn',t.cart+' ');setText('#collection .tile:nth-of-type(1) small',t.tile1);setText('#collection .tile:nth-of-type(1) strong',t.tile1b);setText('#collection .tile:nth-of-type(2) small',t.tile2);setText('#collection .tile:nth-of-type(2) strong',t.tile2b);setText('#collection .tile:nth-of-type(3) small',t.tile3);setText('#collection .tile:nth-of-type(3) strong',t.tile3b);var cats=document.querySelectorAll('#atelier .cat-btn');if(cats[0])cats[0].textContent=t.catAll;if(cats[1])cats[1].textContent=t.catEveryday;if(cats[2])cats[2].textContent=t.catEvening;if(cats[3])cats[3].textContent=t.catStatement;if(cats[4])cats[4].textContent=t.catShoulder;var heads=document.querySelectorAll('#atelier .head');if(heads[1]){setText('#atelier .head:nth-of-type(2) .kicker',t.series);setText('#atelier .head:nth-of-type(2) h2',t.seriesTitle)}setText('#atelier-story .kicker',t.storyK);setText('#atelier-story h2',t.storyT);setText('#atelier-story p',t.storyP);setText('#details .kicker',t.detailsK);setText('#details h2',t.detailsT);setText('#details .head p',t.detailsP);setText('#details .detail:nth-child(1) h3',t.d1);setText('#details .detail:nth-child(1) p',t.d1p);setText('#details .detail:nth-child(2) h3',t.d2);setText('#details .detail:nth-child(2) p',t.d2p);setText('#details .detail:nth-child(3) h3',t.d3);setText('#details .detail:nth-child(3) p',t.d3p);setText('#details .detail:nth-child(4) h3',t.d4);setText('#details .detail:nth-child(4) p',t.d4p);setText('#guide .kicker',t.guideK);setText('#guide h2',t.guideT);setText('#guide .reveal p',t.guideP);setText('#guide .note',t.guideN);setText('#early .kicker',t.earlyK);setText('#early h2',t.earlyT,true);setText('#early p',t.earlyP);setText('#earlyForm button',t.earlyBtn);setText('#formStatus',t.earlyFine);setText('.footer-links a:nth-child(1)',t.footerCollection);setText('.footer-links a:nth-child(2)',t.footerGuide);setText('.footer-links a:nth-child(3)',t.footerEarly);setText('.footer [data-i18n="footer_tag"]',t.footerTag);setText('#cartTitle',t.cartTitle);setText('.cart-note',t.cartNote);setText('#checkoutOpen',t.cartCheckout);setText('#checkoutModal h2',t.checkoutT);setText('#checkoutModal p',t.checkoutP);setText('#checkoutCancel',t.checkoutCancel);setText('#checkoutForm button[type="submit"]',t.checkoutSubmit);setText('#legacyEarlyConsent + label',t.consentEarly);setText('#legacyCheckoutConsent + label',t.consentCheckout);document.querySelectorAll('.add-cart').forEach(function(b){b.textContent=t.add});var tagMap={signature:lang==='en'?'Signature':'Signature',everyday:lang==='en'?'Everyday':'Günlük',evening:lang==='en'?'Evening':'Akşam',statement:'Statement',shoulder:lang==='en'?'Shoulder':'Omuz'};document.querySelectorAll('.product').forEach(function(card){var tag=card.querySelector('.tag');if(tag)tag.textContent=tagMap[card.dataset.cat]||tag.textContent});
+  }
+  function hook(){var original=window.applyLang;if(typeof original==='function'&&!window.__trenzaExtraLang){window.__trenzaExtraLang=true;window.applyLang=function(lang){original(lang);applyExtra(lang)};applyExtra(localStorage.getItem('trenza-lang')||'tr')}}
+  setTimeout(hook,50);setTimeout(hook,500);
 })();
