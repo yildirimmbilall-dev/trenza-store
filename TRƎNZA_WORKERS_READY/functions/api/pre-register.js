@@ -1,14 +1,14 @@
-import { json, methodNotAllowed, options, assertSameOrigin, readJson, normalizeEmail, validEmail, cleanText, honeypotTriggered, nowIso, CONSENT_VERSION } from './_utils.js';
+import { json, methodNotAllowed, options, assertSameOrigin, readJson, normalizeEmail, validEmail, honeypotTriggered, nowIso, CONSENT_VERSION } from './_utils.js';
+import { sendOwnerNotification } from './_email.js';
 
 export async function onRequestOptions({ request }) { return options(request); }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, ctx }) {
   if (!assertSameOrigin(request)) return json({ ok: false, error: 'origin_not_allowed' }, 403);
   let body;
   try { body = await readJson(request); } catch (error) {
     return json({ ok: false, error: error.message === 'payload_too_large' ? 'payload_too_large' : 'invalid_request' }, 400);
   }
-
   if (honeypotTriggered(body.website)) return json({ ok: true, subscribed: true });
 
   const email = normalizeEmail(body.email);
@@ -25,6 +25,9 @@ export async function onRequestPost({ request, env }) {
       VALUES (?, ?, ?, ?, 'website-prelaunch', ?, ?)
       ON CONFLICT(email) DO UPDATE SET language=excluded.language, consent_version=excluded.consent_version, consented_at=excluded.consented_at, source=excluded.source, updated_at=excluded.updated_at
     `).bind(email, language, CONSENT_VERSION, now, now, now).run();
+
+    if (ctx?.waitUntil) ctx.waitUntil(sendOwnerNotification(env, { kind: 'early-access', email, language }));
+    else await sendOwnerNotification(env, { kind: 'early-access', email, language });
 
     return json({ ok: true, subscribed: true, id: result.meta?.last_row_id || null });
   } catch (error) {
