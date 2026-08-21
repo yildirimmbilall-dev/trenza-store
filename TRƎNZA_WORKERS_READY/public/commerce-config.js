@@ -124,3 +124,41 @@ window.TRENZA_COMMERCE = {
     mountLanguageStyles();
   }
 })();
+
+/* Final accessibility enhancement for product Quick View. */
+(function () {
+  function enhanceProductKeyboardAccess() {
+    if (document.getElementById('trenza-a11y-product-style')) return;
+    var style = document.createElement('style');
+    style.id = 'trenza-a11y-product-style';
+    style.textContent = '.product:focus-visible{outline:2px solid #c2a477;outline-offset:3px}';
+    document.head.appendChild(style);
+
+    document.querySelectorAll('.product').forEach(function (card) {
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      if (!card.getAttribute('aria-label')) {
+        card.setAttribute('aria-label', (card.dataset.product || '') + ' — detayları gör');
+      }
+      if (card.dataset.trenzaA11yBound === '1') return;
+      card.dataset.trenzaA11yBound = '1';
+      card.addEventListener('keydown', function (e) {
+        if (e.target.closest && e.target.closest('.add-cart')) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (typeof window.openProductQuickview === 'function') {
+            window.openProductQuickview(card);
+          } else {
+            card.click();
+          }
+        }
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhanceProductKeyboardAccess, { once: true });
+  } else {
+    enhanceProductKeyboardAccess();
+  }
+  setTimeout(enhanceProductKeyboardAccess, 700);
+})();
