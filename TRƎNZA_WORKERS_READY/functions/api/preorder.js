@@ -12,40 +12,59 @@ export async function onRequestPost({ request, env, ctx }) {
     return json({ ok: false, error: error.message === 'payload_too_large' ? 'payload_too_large' : 'invalid_request' }, 400);
   }
   if (honeypotTriggered(body.website)) return json({ ok: true, submitted: true });
+  if (!env.DB) return json({ ok: false, error: 'database_not_configured' }, 503);
+
+  const language = body.language === 'en' ? 'en' : 'tr';
+  const consent = body.consent === true;
+
+  /* Legacy early-access form compatibility: the older live index posted to /api/preorder. */
+  if (body.type === 'early-access') {
+    const email = normalizeEmail(body.email);
+    if (!validEmail(email)) return json({ ok: false, error: 'invalid_email' }, 400);
+    if (!consent) return json({ ok: false, error: 'consent_required' }, 400);
+    const now = nowIso();
+    try {
+      const result = await env.DB.prepare(`
+        INSERT INTO subscribers (email, language, consent_version, consented_at, source, created_at, updated_at)
+        VALUES (?, ?, ?, ?, 'website-prelaunch', ?, ?)
+        ON CONFLICT(email) DO UPDATE SET language=excluded.language, consent_version=excluded.consent_version, consented_at=excluded.consented_at, source=excluded.source, updated_at=excluded.updated_at
+      `).bind(email, language, CONSENT_VERSION, now, now, now).run();
+      if (ctx?.waitUntil) ctx.waitUntil(sendOwnerNotification(env, { kind: 'early-access', email, language }));
+      else await sendOwnerNotification(env, { kind: 'early-access', email, language });
+      return json({ ok: true, subscribed: true, id: result.meta?.last_row_id || null });
+    } catch (error) {
+      console.error('legacy early-access insert failed', error);
+      return json({ ok: false, error: 'server_error' }, 500);
+    }
+  }
 
   const name = cleanText(body.name, 100);
   const email = normalizeEmail(body.email);
   const note = cleanText(body.note, 1000);
-  const language = body.language === 'en' ? 'en' : 'tr';
-  const consent = body.consent === true;
   const rawItems = body.items;
-
   if (name.length < 2 || !validEmail(email)) return json({ ok: false, error: 'invalid_customer' }, 400);
   if (!consent) return json({ ok: false, error: 'consent_required' }, 400);
-  if (!Array.isArray(rawItems) || rawItems.length < 1 || rawItems.length > 10) return json({ ok: false, error: 'invalid_items' }, 400);
 
-  const items = [];
-  for (const item of rawItems) {
-    const product = String(item?.product || '');
-    const quantity = Number(item?.quantity);
-    if (!ALLOWED_PRODUCTS.has(product) || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) return json({ ok: false, error: 'invalid_items' }, 400);
-    items.push({ product, quantity });
+  /* Accept both the new structured payload and the old comma-separated payload. */
+  let items = [];
+  if (Array.isArray(rawItems)) {
+    items = rawItems.map(item => ({ product: String(item?.product || ''), quantity: Number(item?.quantity) }));
+  } else if (typeof rawItems === 'string') {
+    items = rawItems.split(',').map(part => {
+      const m = part.trim().match(/^(.*?)\s+x(\d+)$/i);
+      return m ? { product: m[1].trim(), quantity: Number(m[2]) } : null;
+    }).filter(Boolean);
   }
-
-  if (!env.DB) return json({ ok: false, error: 'database_not_configured' }, 503);
+  if (items.length < 1 || items.length > 10) return json({ ok: false, error: 'invalid_items' }, 400);
+  for (const item of items) {
+    if (!ALLOWED_PRODUCTS.has(item.product) || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20) return json({ ok: false, error: 'invalid_items' }, 400);
+  }
 
   const now = nowIso();
   try {
     const statements = [
-      env.DB.prepare(`
-        INSERT INTO preorder_requests (name, email, items_json, note, language, consent_version, consented_at, source, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'website-preorder', ?)
-      `).bind(name, email, JSON.stringify(items), note, language, CONSENT_VERSION, now),
-      env.DB.prepare(`
-        INSERT INTO subscribers (email, language, consent_version, consented_at, source, created_at, updated_at)
-        VALUES (?, ?, ?, ?, 'website-preorder', ?, ?)
-        ON CONFLICT(email) DO UPDATE SET language=excluded.language, consent_version=excluded.consent_version, consented_at=excluded.consented_at, source=excluded.source, updated_at=excluded.updated_at
-      `).bind(email, language, CONSENT_VERSION, now, now, now)
+      env.DB.prepare(`INSERT INTO preorder_requests (name, email, items_json, note, language, consent_version, consented_at, source, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'website-preorder', ?)`).bind(name, email, JSON.stringify(items), note, language, CONSENT_VERSION, now, now),
+      env.DB.prepare(`INSERT INTO subscribers (email, language, consent_version, consented_at, source, created_at, updated_at) VALUES (?, ?, ?, ?, 'website-preorder', ?, ?) ON CONFLICT(email) DO UPDATE SET language=excluded.language, consent_version=excluded.consent_version, consented_at=excluded.consented_at, source=excluded.source, updated_at=excluded.updated_at`).bind(email, language, CONSENT_VERSION, now, now, now)
     ];
     const results = await env.DB.batch(statements);
     const result = results?.[0];
