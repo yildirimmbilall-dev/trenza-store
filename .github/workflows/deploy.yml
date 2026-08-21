@@ -23,6 +23,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Restore VITA product source
+        run: base64 -d .trenza-assets/vita.jpg.b64 > public/assets/products/vita.jpg
+
+      - name: Configure Resend secret
+        if: ${{ secrets.RESEND_API_KEY != '' }}
+        run: printf '%s' "$RESEND_API_KEY" | npx wrangler secret put RESEND_API_KEY
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
