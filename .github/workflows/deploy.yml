@@ -24,7 +24,9 @@ jobs:
         run: npm install
 
       - name: Restore VITA product source
-        run: base64 -d .trenza-assets/vita.jpg.b64 > public/assets/products/vita.jpg
+        run: |
+          base64 -d .trenza-assets/vita.jpg.b64 > public/assets/products/vita.jpg
+          cp public/assets/products/vita.jpg public/assets/products/vita-20260821.jpg
 
       - name: Apply final site fixes
         run: node scripts/prepare-site.mjs
