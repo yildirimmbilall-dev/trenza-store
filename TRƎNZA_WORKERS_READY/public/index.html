@@ -51,6 +51,16 @@ html{scroll-behavior:smooth}
 body{overflow-x:hidden}
 .hero-media{transform:scale(1.035);transition:transform 1.8s cubic-bezier(.2,.7,.2,1),filter 1s ease}
 .hero.loaded .hero-media{transform:scale(1)}
+.hero-media.drift{animation:heroDrift 22s ease-in-out infinite alternate}
+@keyframes heroDrift{from{transform:scale(1) translate(0,0)}to{transform:scale(1.045) translate(-1.2%,-0.8%)}}
+.marquee{overflow:hidden;position:relative;z-index:2;background:var(--espresso2);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.marquee-track{display:flex;width:max-content;will-change:transform;animation:marqueeScroll 24s linear infinite}
+.marquee-track span{display:flex;align-items:center;gap:14px;padding:12px 28px;font:500 10px 'DM Sans',sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#d8bf97;white-space:nowrap}
+.marquee-track span i{font-style:normal;color:#7a6a58}
+@keyframes marqueeScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-33.333333%,0,0)}}
+.editorial.reveal.visible .tile img{animation:tileDrift 26s ease-in-out infinite alternate}
+@keyframes tileDrift{from{transform:scale(1.02)}to{transform:scale(1.09) translate(-1%,-1%)}}
+.tile:hover img{animation-play-state:paused}
 .hero-inner{opacity:0;transform:translateY(28px);transition:opacity 1.1s ease .2s,transform 1.1s cubic-bezier(.2,.7,.2,1) .2s}
 .hero.loaded .hero-inner{opacity:1;transform:none}
 .editorial figure,.product{will-change:transform}
@@ -65,408 +75,79 @@ body{overflow-x:hidden}
 .btn:hover:after{transform:translateX(110%)}
 .kicker{transition:letter-spacing .45s ease}
 .section-head:hover .kicker{letter-spacing:.42em}
-@media(prefers-reduced-motion:reduce){
-  .hero-media,.hero-inner,.editorial figure,.product,.product img{transition:none!important;transform:none!important}
-}
-
+@media(prefers-reduced-motion:reduce){.hero-media,.hero-inner,.editorial figure,.product,.product img{transition:none!important;transform:none!important}.marquee-track{animation:none!important}.tile img{animation:none!important}}
 @media(max-width:680px){html,body{width:100%;min-width:0}.hero,.section,.launch,.footer{width:100%;overflow:hidden}img{height:auto}.story-img,.guide img{max-height:none}.collection .head{padding:0 2vw}.collection .products{align-items:start}.collection .product{background:#e6dbd0}.launch{padding:78px 5vw}.launch h2{font-size:46px}.fine{font-size:8px!important}}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.form button:focus-visible,.form input:focus-visible,.menu:focus-visible,.navlinks a:focus-visible,.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}.navlinks.open{display:flex}
 
 /* Commerce-ready layer */
-.nav-tools{display:flex;align-items:center;gap:12px}.cart-btn{height:38px;padding:0 13px;border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.04);color:#fff;font:500 10px 'DM Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.cart-btn span{display:inline-flex;min-width:18px;height:18px;align-items:center;justify-content:center;margin-left:6px;border-radius:50%;background:var(--gold);color:var(--espresso);font-size:9px}.add-cart{margin-top:14px;width:100%;min-height:40px;border:1px solid rgba(80,60,45,.3);background:transparent;color:var(--ink);font:500 9px 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.add-cart:hover{background:var(--espresso);color:#fff}.cart-drawer{position:fixed;z-index:300;inset:0;pointer-events:none}.cart-backdrop{position:absolute;inset:0;background:rgba(15,10,7,.48);opacity:0;transition:opacity .35s}.cart-panel{position:absolute;top:0;right:0;width:min(480px,100%);height:100%;background:#f6efe8;color:var(--ink);transform:translateX(102%);transition:transform .45s cubic-bezier(.2,.7,.2,1);box-shadow:-20px 0 60px rgba(0,0,0,.18);display:flex;flex-direction:column}.cart-drawer.open{pointer-events:auto}.cart-drawer.open .cart-backdrop{opacity:1}.cart-drawer.open .cart-panel{transform:none}.cart-head{padding:24px 24px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cart-head h2{font:400 32px 'Cormorant Garamond',serif;margin:0}.icon-close{border:0;background:none;font-size:25px;cursor:pointer;color:var(--ink)}.cart-body{padding:20px 24px;overflow:auto;flex:1}.cart-empty{text-align:center;color:var(--muted);padding:60px 20px;line-height:1.8}.cart-item{display:grid;grid-template-columns:78px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.cart-item img{width:78px;height:96px;object-fit:contain;background:#e5dbd0}.cart-item strong{font:500 22px 'Cormorant Garamond',serif}.cart-item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.qty{display:flex;align-items:center;gap:8px;margin-top:9px}.qty button{width:26px;height:26px;border:1px solid var(--line);background:transparent;cursor:pointer}.remove{border:0;background:none;color:#8b6d58;font-size:9px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px}.cart-foot{padding:20px 24px 26px;border-top:1px solid var(--line)}.cart-note{font-size:10px;color:var(--muted);line-height:1.6;margin:0 0 14px}.checkout-btn{width:100%;min-height:52px;border:0;background:var(--espresso);color:#fff;font-size:10px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}.checkout-btn:disabled{cursor:not-allowed}.checkout-modal{position:fixed;z-index:350;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,10,7,.58)}.checkout-modal.open{display:flex}.checkout-card{width:min(620px,100%);max-height:90svh;overflow:auto;background:#f6efe8;color:var(--ink);padding:28px}.checkout-card h2{font:400 42px 'Cormorant Garamond',serif;margin:0 0 8px}.checkout-card>p{font-size:12px;color:var(--muted);line-height:1.7}.checkout-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.checkout-grid label{font-size:9px;letter-spacing:.12em;text-transform:uppercase}.checkout-grid input,.checkout-grid textarea{margin-top:7px;width:100%;border:1px solid var(--line);background:#fffaf5;padding:12px;font:400 13px 'DM Sans',sans-serif}.checkout-grid textarea{min-height:90px;resize:vertical}.checkout-full{grid-column:1/-1}.checkout-actions{display:flex;gap:10px;margin-top:18px}.checkout-actions button{flex:1;min-height:48px}.secondary{border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}.primary-dark{border:0;background:var(--espresso);color:#fff;cursor:pointer}.privacy{font-size:9px!important;color:#8a796c!important}.toast{position:fixed;z-index:500;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--espresso);color:#fff;padding:12px 18px;font-size:10px;letter-spacing:.08em;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:680px){.nav-tools{gap:7px}.cart-btn{padding:0 9px;font-size:9px}.cart-panel{width:100%}.checkout-grid{grid-template-columns:1fr}.checkout-full{grid-column:auto}.checkout-card{padding:22px}.checkout-card h2{font-size:34px}.checkout-actions{flex-direction:column}.product-info{padding:15px 13px 18px}.add-cart{font-size:8px}}
-
-.lang-switch{display:flex;gap:2px;border:1px solid rgba(255,255,255,.35);border-radius:4px;overflow:hidden}
-.lang-switch button{background:transparent;border:0;color:rgba(255,255,255,.7);font:500 10px 'DM Sans',sans-serif;letter-spacing:.12em;padding:6px 9px;cursor:pointer}
-.lang-switch button.active{background:rgba(255,255,255,.15);color:#fff}
-.nav.scrolled .lang-switch{border-color:rgba(33,24,18,.2)}
-.nav.scrolled .lang-switch button{color:var(--muted)}
-.nav.scrolled .lang-switch button.active{background:var(--espresso);color:#fff}
-
-
-.category-filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 36px}
-.cat-btn{background:transparent;border:1px solid var(--line);color:var(--muted);font:500 11px 'DM Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:.25s}
-.cat-btn:hover,.cat-btn.active{border-color:var(--espresso);color:var(--espresso);background:rgba(33,24,18,.04)}
-.product.hide{display:none}
-.hp-field{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
-
-.size-table{width:100%;margin-top:24px;border-collapse:collapse;font-size:12px}
-.size-table th,.size-table td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--line);color:var(--muted)}
-.size-table th[scope="col"]{font:500 10px 'DM Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid var(--ink)}
-.size-table th[scope="row"]{text-align:left;font:500 13px 'Cormorant Garamond',serif;letter-spacing:.04em;color:var(--ink)}
-@media(max-width:680px){.size-table{font-size:10px}.size-table th,.size-table td{padding:8px 4px}}
-
-</style></head>
-<body><a class="sr-only" href="#main-content">İçeriğe geç</a>
+.nav-tools{display:flex;align-items:center;gap:12px}.cart-btn{height:38px;padding:0 13px;border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.04);color:#fff;font:500 10px 'DM Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.cart-btn span{display:inline-flex;min-width:18px;height:18px;align-items:center;justify-content:center;margin-left:6px;border-radius:50%;background:var(--gold);color:var(--espresso);font-size:9px}.add-cart{margin-top:14px;width:100%;min-height:40px;border:1px solid rgba(80,60,45,.3);background:transparent;color:var(--ink);font:500 9px 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}.add-cart:hover{background:var(--espresso);color:#fff}.cart-drawer{position:fixed;z-index:300;inset:0;pointer-events:none}.cart-backdrop{position:absolute;inset:0;background:rgba(15,10,7,.48);opacity:0;transition:opacity .35s}.cart-panel{position:absolute;top:0;right:0;width:min(480px,100%);height:100%;background:#f6efe8;color:var(--ink);transform:translateX(102%);transition:transform .45s cubic-bezier(.2,.7,.2,1);box-shadow:-20px 0 60px rgba(0,0,0,.18);display:flex;flex-direction:column}.cart-drawer.open{pointer-events:auto}.cart-drawer.open .cart-backdrop{opacity:1}.cart-drawer.open .cart-panel{transform:none}.cart-head{padding:24px 24px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cart-head h2{font:400 32px 'Cormorant Garamond',serif;margin:0}.icon-close{border:0;background:none;font-size:25px;cursor:pointer;color:var(--ink)}.cart-body{padding:20px 24px;overflow:auto;flex:1}.cart-empty{text-align:center;color:var(--muted);padding:60px 20px}.cart-item{display:grid;grid-template-columns:78px 1fr 18px;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);align-items:start}.cart-item picture img{width:78px;height:78px;object-fit:cover;background:#e1d4c7}.cart-item strong{font:500 20px 'Cormorant Garamond',serif;letter-spacing:.08em}.cart-item small{display:block;margin-top:3px;color:var(--muted);font-size:9px}.qty{display:flex;align-items:center;gap:9px;margin-top:10px}.qty button{width:25px;height:25px;border:1px solid var(--line);background:transparent;cursor:pointer}.remove{margin-top:7px;border:0;background:none;padding:0;color:#8a6b5a;font-size:9px;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}.cart-foot{padding:18px 24px;border-top:1px solid var(--line)}.cart-note{font-size:10px;line-height:1.65;color:var(--muted);margin:0 0 14px}.checkout-btn{width:100%;height:50px;border:0;background:var(--espresso);color:#fff;letter-spacing:.15em;text-transform:uppercase;font-size:9px;cursor:pointer}.toast{position:fixed;z-index:400;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#211812;color:#fff;padding:12px 16px;font-size:10px;letter-spacing:.08em;transition:.35s;max-width:calc(100vw - 40px);text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.modal{position:fixed;z-index:350;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,10,7,.56)}.modal.open{display:flex}.modal-card{width:min(640px,100%);max-height:90vh;overflow:auto;background:#f6efe8;color:var(--ink);padding:30px;box-shadow:0 30px 80px rgba(0,0,0,.24)}.modal-card h2{font:400 42px 'Cormorant Garamond',serif;margin:0 0 8px}.modal-card p{font-size:12px;line-height:1.7;color:var(--muted)}.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-grid input,.modal-grid textarea{width:100%;border:1px solid var(--line);background:#fffaf5;color:var(--ink);padding:12px;font:inherit}.modal-grid textarea{min-height:120px;resize:vertical;grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.modal-actions button{min-height:42px;padding:0 17px;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:9px;letter-spacing:.12em;text-transform:uppercase}.modal-actions .primary{background:var(--espresso);color:#fff;border-color:var(--espresso)}.hp-field{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}.catbar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 auto 36px}.cat-btn{border:1px solid var(--line);background:transparent;color:var(--muted);padding:9px 13px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}.cat-btn.active,.cat-btn:hover{background:var(--espresso);color:#fff;border-color:var(--espresso)}.product.hide{display:none}@media(max-width:680px){.nav-tools{gap:7px}.cart-btn{height:36px;padding:0 9px}.modal-card{padding:22px}.modal-grid{grid-template-columns:1fr}.modal-grid textarea{grid-column:auto}.modal-actions{flex-direction:column}.modal-actions button{width:100%}}
+</style>
+</head>
+<body>
 <nav class="nav" id="nav"><a class="wordmark" href="#top">TRƎNZA</a><div class="navlinks" id="links"><a href="#collection">Koleksiyon</a><a href="#atelier">Atelier</a><a href="#details">Detaylar</a><a href="#guide">Ölçüler</a><a class="cta" href="#early">Ön Kayıt</a></div><div class="nav-tools"><div class="lang-switch" id="langSwitch"><button type="button" data-lang="tr" class="active">TR</button><button type="button" data-lang="en">EN</button></div><button class="cart-btn" id="cartBtn" type="button" aria-label="Ön kayıt sepetini aç">Sepet <span id="cartCount">0</span></button><button class="menu" id="menu" aria-label="Menü">☰</button></div></nav>
 <header class="hero" id="top"><picture><source srcset="assets/hero.webp" type="image/webp"><img class="hero-media" src="assets/hero.jpg" alt="TRƎNZA premium çanta koleksiyonu" fetchpriority="high"></picture><div class="hero-inner reveal"><div class="eyebrow" data-i18n="hero_eyebrow">Coming Soon · 2026 Lansman</div><h1>TRƎNZA</h1><p data-i18n="hero_p">El emeğiyle şekillenen dokular. Zamansız formlar. İlk koleksiyon çok yakında — ön kayıt listesine katıl.</p><div class="actions"><a class="btn primary" href="#collection" data-i18n="hero_btn1">Koleksiyonu keşfet</a><a class="btn ghost" href="#early" data-i18n="hero_btn2">Ön kayıta katıl</a></div></div></header>
-<main id="main-content">
-<section class="section" id="collection"><div class="wrap"><div class="head reveal"><div class="kicker" data-i18n="col_kicker">The TRƎNZA collection</div><div class="rule"></div><h2 data-i18n="col_title">FORM, DOKU &amp; KARAKTER</h2><p data-i18n="col_desc">Günlük kullanımdan akşam stiline uzanan, aynı sıcak ve rafine çizgide buluşan çantalar. Satış yakında.</p></div><div class="editorial reveal"><figure class="tile big"><picture><source srcset="assets/collection.webp" type="image/webp"><img src="assets/collection.jpg" alt="TRƎNZA ilk koleksiyon" loading="lazy"></picture><figcaption class="tile-caption"><small>Signature collection</small><strong>EL EMEĞİ, ZAMANSIZ ŞIKLIK.</strong></figcaption></figure><figure class="tile small"><picture><source srcset="assets/serii.webp" type="image/webp"><img src="assets/serii.jpg" alt="TRƎNZA Seri II" loading="lazy"></picture><figcaption class="tile-caption"><small>Series II</small><strong>YENİ FORMLAR.</strong></figcaption></figure><figure class="tile small"><picture><source srcset="assets/products/shell.webp" type="image/webp"><img src="assets/products/shell.jpg" alt="TRƎNZA el emeği detay" loading="lazy"></picture><figcaption class="tile-caption"><small>Coming Soon</small><strong>EL EMEĞİ DETAY.</strong></figcaption></figure></div></div></section>
-<section class="section collection" id="models"><div class="wrap"><div class="head reveal"><div class="kicker" data-i18n="kicker-models">Signature models</div><h2 data-i18n="title-models">İLK FORMLAR</h2><p data-i18n="desc-models">Her model kendi karakterine sahip; koleksiyonun tamamı tek bir TRƎNZA dünyasında birleşiyor.</p></div>
-<div class="category-filters reveal" id="categoryFilters">
-  <button type="button" class="cat-btn active" data-cat="all">Tümü</button>
-  <button type="button" class="cat-btn" data-cat="signature">Signature</button>
-  <button type="button" class="cat-btn" data-cat="evening">Evening</button>
-  <button type="button" class="cat-btn" data-cat="everyday">Everyday</button>
-  <button type="button" class="cat-btn" data-cat="shoulder">Shoulder</button>
-  <button type="button" class="cat-btn" data-cat="statement">Statement</button>
-</div><div class="products reveal"><article class="product" data-product="SCULPT" data-cat="signature"><div class="product-media"><picture><source srcset="assets/products/sculpt.webp" type="image/webp"><img src="assets/products/sculpt.jpg" alt="TRƎNZA SCULPT çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">SCULPT</div><div class="product-meta" data-meta-tr="Yumuşak hatlı klasik form. Günlük kullanım için ideal." data-meta-en="Soft, classic silhouette. Ideal for everyday use.">Yumuşak hatlı klasik form. Günlük kullanım için ideal.</div><span class="tag">Signature</span><button class="add-cart" type="button" data-add="SCULPT">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="WAVE" data-cat="everyday"><div class="product-media"><picture><source srcset="assets/products/wave.webp" type="image/webp"><img src="assets/products/wave.jpg" alt="TRƎNZA WAVE çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">WAVE</div><div class="product-meta" data-meta-tr="Dalgalı formu ile modern ve dikkat çekici bir tasarım." data-meta-en="Modern, eye-catching design with a wave-inspired form.">Dalgalı formu ile modern ve dikkat çekici bir tasarım.</div><span class="tag">Everyday</span><button class="add-cart" type="button" data-add="WAVE">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="LUNA" data-cat="evening"><div class="product-media"><picture><source srcset="assets/products/luna.webp" type="image/webp"><img src="assets/products/luna.jpg" alt="TRƎNZA LUNA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">LUNA</div><div class="product-meta" data-meta-tr="Ay formundan ilham alan zarif ve şık bir akşam çantası." data-meta-en="An elegant evening bag inspired by the shape of the moon.">Ay formundan ilham alan zarif ve şık bir akşam çantası.</div><span class="tag">Evening</span><button class="add-cart" type="button" data-add="LUNA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="FOLD" data-cat="shoulder"><div class="product-media"><picture><source srcset="assets/products/fold.webp" type="image/webp"><img src="assets/products/fold.jpg" alt="TRƎNZA FOLD çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">FOLD</div><div class="product-meta" data-meta-tr="Katlanabilir formu ile hem şık hem de kullanışlı." data-meta-en="Fold-over form — refined and practical.">Katlanabilir formu ile hem şık hem de kullanışlı.</div><span class="tag">Shoulder</span><button class="add-cart" type="button" data-add="FOLD">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="SHELL" data-cat="statement"><div class="product-media"><picture><source srcset="assets/products/shell.webp" type="image/webp"><img src="assets/products/shell.jpg" alt="TRƎNZA SHELL çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">SHELL</div><div class="product-meta" data-meta-tr="Deniz kabuğundan ilham alan özgün ve heykelsi bir tasarım." data-meta-en="A sculptural design inspired by the shell.">Deniz kabuğundan ilham alan özgün ve heykelsi bir tasarım.</div><span class="tag">Statement</span><button class="add-cart" type="button" data-add="SHELL">ÖN KAYIT SEPETİNE EKLE</button></div></article></div><div style="height:34px"></div><div class="head reveal" style="margin-bottom:35px"><div class="kicker">Series II</div><h2>ARIA · ÉCLAT · NOVA · BAIA · VITA</h2></div><div class="products reveal"><article class="product" data-product="ARIA" data-cat="signature"><div class="product-media"><picture><source srcset="assets/products/aria.webp" type="image/webp"><img src="assets/products/aria.jpg" alt="TRƎNZA ARIA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">ARIA</div><div class="product-meta" data-meta-tr="Minimal ve zarif bir duruş. Günlük kullanım için sade ve şık." data-meta-en="Minimal and refined. Simple elegance for everyday.">Minimal ve zarif bir duruş. Günlük kullanım için sade ve şık.</div><span class="tag">Signature</span><button class="add-cart" type="button" data-add="ARIA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="ÉCLAT" data-cat="evening"><div class="product-media"><picture><source srcset="assets/products/eclat.webp" type="image/webp"><img src="assets/products/eclat.jpg" alt="TRƎNZA ÉCLAT çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">ÉCLAT</div><div class="product-meta" data-meta-tr="Altın zincir detayı ile ışıltılı bir dokunuş. Akşam kombinleri için ideal." data-meta-en="A luminous touch with gold chain detail. Ideal for evening looks.">Altın zincir detayı ile ışıltılı bir dokunuş. Akşam kombinleri için ideal.</div><span class="tag">Evening</span><button class="add-cart" type="button" data-add="ÉCLAT">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="NOVA" data-cat="statement"><div class="product-media"><picture><source srcset="assets/products/nova.webp" type="image/webp"><img src="assets/products/nova.jpg" alt="TRƎNZA NOVA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">NOVA</div><div class="product-meta" data-meta-tr="Heykelsi formu ile stilinize yeni bir boyut katar." data-meta-en="Sculptural form that adds a new dimension to your style.">Heykelsi formu ile stilinize yeni bir boyut katar.</div><span class="tag">Statement</span><button class="add-cart" type="button" data-add="NOVA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="BAIA" data-cat="everyday"><div class="product-media"><picture><source srcset="assets/products/baia.webp" type="image/webp"><img src="assets/products/baia.jpg" alt="TRƎNZA BAIA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">BAIA</div><div class="product-meta" data-meta-tr="Yumuşak büzgülü yapısı ve geniş iç hacmi ile günlük hayatı kolaylaştırır." data-meta-en="Soft drawstring structure and generous capacity for daily life.">Yumuşak büzgülü yapısı ve geniş iç hacmi ile günlük hayatı kolaylaştırır.</div><span class="tag">Everyday</span><button class="add-cart" type="button" data-add="BAIA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="VITA" data-cat="shoulder"><div class="product-media"><picture><source srcset="assets/products/vita.webp" type="image/webp"><img src="assets/products/vita.jpg" alt="TRƎNZA VITA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">VITA</div><div class="product-meta" data-meta-tr="Kavisli hatları ve zincir askısı ile feminen, hafif ve konforlu." data-meta-en="Curved lines and chain strap — feminine, light and comfortable.">Kavisli hatları ve zincir askısı ile feminen, hafif ve konforlu.</div><span class="tag">Shoulder</span><button class="add-cart" type="button" data-add="VITA">ÖN KAYIT SEPETİNE EKLE</button></div></article></div></div></section>
-<section class="section story" id="atelier"><div class="wrap story-grid"><picture><source srcset="assets/brand-board.webp" type="image/webp"><img class="story-img reveal" src="assets/brand-board.jpg" alt="TRƎNZA marka kimliği ve paketleme" loading="lazy"></picture><div class="reveal"><div class="kicker" data-i18n="atelier_kicker">The TRƎNZA Atelier</div><h2 data-i18n="atelier_title">DETAY,<br>BİR İMZA GİBİDİR.</h2><p data-i18n="atelier_p1">TRƎNZA henüz satışa açılmadı. Şu an ilk koleksiyon hazırlanıyor; her çanta el emeğiyle, sınırlı adette üretilecek.</p><p data-i18n="atelier_p2">Sıcak nötr tonlar, güçlü formlar ve özenli paketleme markanın dilini oluşturuyor. Fiziksel mağaza yok — doğrudan markadan, komisyonsuz.</p><div class="signature" data-i18n="atelier_sig">El emeği, zamansız şıklık. · 2026</div></div></div></section>
-<section class="section" id="details"><div class="wrap"><div class="head reveal"><div class="kicker">Made with intention</div><h2>TRƎNZA DETAYLARI</h2><p>Gösterişten çok malzemenin, formun ve işçiliğin konuştuğu bir marka dili.</p></div><div class="details reveal"><div class="detail"><div class="icon">Ⅰ</div><h3>EL EMEĞİ</h3><p>Her parça özenle örülür, şekillendirilir ve son kontrolleri yapılır.</p></div><div class="detail"><div class="icon">◌</div><h3>DOĞAL DOKU</h3><p>Dokuyu öne çıkaran yüzeylerle sıcak ve karakterli bir görünüm.</p></div><div class="detail"><div class="icon">◇</div><h3>ZAMANSIZ TASARIM</h3><p>Tekrar tekrar kullanılabilecek sade ve güçlü siluetler.</p></div><div class="detail"><div class="icon">✦</div><h3>ÖZENLİ SUNUM</h3><p>Her sipariş özel paketleme ile marka deneyiminin bir parçası olur.</p></div></div></div></section>
-<section class="section guide" id="guide"><div class="wrap guide-grid"><div class="reveal"><div class="kicker">Size &amp; scale</div><p class="guide-note" style="max-width:640px;margin:12px auto 0;font-size:13px;line-height:1.7;color:var(--muted);text-align:center" data-i18n-guide-note>İlk koleksiyon yetişkin modellerin yanı sıra ölçü rehberinde Mini varyantları da içerir. Kids / Mini hattı lansman sonrası ayrı olarak duyurulacak.</p><h2>DOĞRU FORMU BUL.</h2><p>Her modelin ölçüsünü, ağırlığını ve kullanım alanını satın almadan önce net şekilde görebilmen için ölçü rehberimizi hazırladık.</p><p>Ölçüler üretim tekniğine bağlı olarak yaklaşık 1–2 cm değişebilir.</p><div class="note">Ölçüler model bazında üretim ölçüleri kesinleştiğinde ürün sayfalarında ayrıca gösterilecektir.</div></div><picture><source srcset="assets/size-guide.webp" type="image/webp"><img class="reveal" src="assets/size-guide.jpg" alt="TRƎNZA ölçü ve boyut rehberi" loading="lazy"></picture>
-<table class="size-table reveal" aria-label="TRƎNZA model ölçü tablosu">
-  <caption class="sr-only">Model bazında yaklaşık ölçüler (üretim netleştiğinde güncellenecektir)</caption>
-  <thead><tr><th scope="col">Model</th><th scope="col">Genişlik</th><th scope="col">Yükseklik</th><th scope="col">Derinlik</th><th scope="col">Askı</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">SCULPT</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">WAVE</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">LUNA</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">FOLD</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">SHELL</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">ARIA</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">ÉCLAT</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">NOVA</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">BAIA</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    <tr><th scope="row">VITA</th><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-  </tbody>
-</table></div></section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTrack"><span data-marquee>EL EMEĞİ <i>·</i> SINIRLI SERİ <i>·</i> ZAMANSIZ ŞIKLIK <i>·</i> ÇOK YAKINDA <i>·</i></span><span data-marquee>EL EMEĞİ <i>·</i> SINIRLI SERİ <i>·</i> ZAMANSIZ ŞIKLIK <i>·</i> ÇOK YAKINDA <i>·</i></span><span data-marquee>EL EMEĞİ <i>·</i> SINIRLI SERİ <i>·</i> ZAMANSIZ ŞIKLIK <i>·</i> ÇOK YAKINDA <i>·</i></span></div></div>
+<main>
+<section class="section" id="collection"><div class="wrap"><div class="head reveal"><div class="kicker" data-i18n="col_kicker">The TRƎNZA collection</div><div class="rule"></div><h2 data-i18n="col_title">FORM, DOKU &amp; KARAKTER</h2><p data-i18n="col_desc">Günlük kullanımdan akşam stiline uzanan, aynı sıcak ve rafine çizgide buluşan çantalar. Satış yakında.</p></div><div class="editorial reveal"><figure class="tile big"><picture><source srcset="assets/collection.webp" type="image/webp"><img src="assets/collection.jpg" alt="TRƎNZA ilk koleksiyon" loading="lazy"></picture><figcaption class="tile-caption"><small>Signature collection</small><strong>EL EMEĞİ, ZAMANSIZ ŞIKLIK.</strong></figcaption></figure><figure class="tile small"><picture><source srcset="assets/serii.webp" type="image/webp"><img src="assets/serii.jpg" alt="TRƎNZA Seri II" loading="lazy"></picture><figcaption class="tile-caption"><small>Series II</small><strong>YENİ FORMLAR.</strong></figcaption></figure><figure class="tile small"><picture><source srcset="assets/brand-board.webp" type="image/webp"><img src="assets/brand-board.jpg" alt="TRƎNZA marka dünyası" loading="lazy"></picture><figcaption class="tile-caption"><small>Atelier</small><strong>DETAYLARDA İMZA.</strong></figcaption></figure></div></div></section>
+<section class="section collection" id="atelier"><div class="wrap"><div class="head reveal"><div class="kicker" data-i18n="atelier_kicker">Signature models</div><div class="rule"></div><h2 data-i18n="atelier_title">İLK FORMLAR</h2><p data-i18n="atelier_desc">Her model kendi karakterine sahip; koleksiyonun tamamı tek bir TRƎNZA dünyasında birleşiyor.</p></div><div class="catbar reveal"><button class="cat-btn active" data-cat="all">Tümü</button><button class="cat-btn" data-cat="everyday">Günlük</button><button class="cat-btn" data-cat="evening">Akşam</button><button class="cat-btn" data-cat="statement">Statement</button><button class="cat-btn" data-cat="shoulder">Omuz</button></div><div class="products reveal"><article class="product" data-product="SCULPT" data-cat="signature"><div class="product-media"><picture><source srcset="assets/products/sculpt.webp" type="image/webp"><img src="assets/products/sculpt.jpg" alt="TRƎNZA SCULPT çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">SCULPT</div><div class="product-meta" data-meta-tr="Yumuşak hatlı klasik form. Günlük kullanım için ideal." data-meta-en="A classic soft-edged form, ideal for everyday use.">Yumuşak hatlı klasik form. Günlük kullanım için ideal.</div><span class="tag">Signature</span><button class="add-cart" type="button" data-add="SCULPT">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="WAVE" data-cat="everyday"><div class="product-media"><picture><source srcset="assets/products/wave.webp" type="image/webp"><img src="assets/products/wave.jpg" alt="TRƎNZA WAVE çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">WAVE</div><div class="product-meta" data-meta-tr="Dalgalı formu ile modern ve dikkat çekici bir tasarım." data-meta-en="A modern, eye-catching design with a wave form.">Dalgalı formu ile modern ve dikkat çekici bir tasarım.</div><span class="tag">Everyday</span><button class="add-cart" type="button" data-add="WAVE">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="LUNA" data-cat="evening"><div class="product-media"><picture><source srcset="assets/products/luna.webp" type="image/webp"><img src="assets/products/luna.jpg" alt="TRƎNZA LUNA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">LUNA</div><div class="product-meta" data-meta-tr="Ay formundan ilham alan zarif ve şık bir akşam çantası." data-meta-en="An elegant evening bag inspired by the shape of the moon.">Ay formundan ilham alan zarif ve şık bir akşam çantası.</div><span class="tag">Evening</span><button class="add-cart" type="button" data-add="LUNA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="FOLD" data-cat="shoulder"><div class="product-media"><picture><source srcset="assets/products/fold.webp" type="image/webp"><img src="assets/products/fold.jpg" alt="TRƎNZA FOLD çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">FOLD</div><div class="product-meta" data-meta-tr="Katlanabilir formu ile hem şık hem de kullanışlı." data-meta-en="Fold-over form — refined and practical.">Katlanabilir formu ile hem şık hem de kullanışlı.</div><span class="tag">Shoulder</span><button class="add-cart" type="button" data-add="FOLD">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="SHELL" data-cat="statement"><div class="product-media"><picture><source srcset="assets/products/shell.webp" type="image/webp"><img src="assets/products/shell.jpg" alt="TRƎNZA SHELL çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">SHELL</div><div class="product-meta" data-meta-tr="Deniz kabuğundan ilham alan özgün ve heykelsi bir tasarım." data-meta-en="A sculptural design inspired by the shell.">Deniz kabuğundan ilham alan özgün ve heykelsi bir tasarım.</div><span class="tag">Statement</span><button class="add-cart" type="button" data-add="SHELL">ÖN KAYIT SEPETİNE EKLE</button></div></article></div><div style="height:34px"></div><div class="head reveal" style="margin-bottom:35px"><div class="kicker">Series II</div><h2>ARIA · ÉCLAT · NOVA · BAIA · VITA</h2></div><div class="products reveal"><article class="product" data-product="ARIA" data-cat="signature"><div class="product-media"><picture><source srcset="assets/products/aria.webp" type="image/webp"><img src="assets/products/aria.jpg" alt="TRƎNZA ARIA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">ARIA</div><div class="product-meta" data-meta-tr="Minimal ve zarif bir duruş. Günlük kullanım için sade ve şık." data-meta-en="Minimal and refined. Simple elegance for everyday.">Minimal ve zarif bir duruş. Günlük kullanım için sade ve şık.</div><span class="tag">Signature</span><button class="add-cart" type="button" data-add="ARIA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="ÉCLAT" data-cat="evening"><div class="product-media"><picture><source srcset="assets/products/eclat.webp" type="image/webp"><img src="assets/products/eclat.jpg" alt="TRƎNZA ÉCLAT çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">ÉCLAT</div><div class="product-meta" data-meta-tr="Altın zincir detayı ile ışıltılı bir dokunuş. Akşam kombinleri için ideal." data-meta-en="A luminous touch with gold chain detail. Ideal for evening looks.">Altın zincir detayı ile ışıltılı bir dokunuş. Akşam kombinleri için ideal.</div><span class="tag">Evening</span><button class="add-cart" type="button" data-add="ÉCLAT">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="NOVA" data-cat="statement"><div class="product-media"><picture><source srcset="assets/products/nova.webp" type="image/webp"><img src="assets/products/nova.jpg" alt="TRƎNZA NOVA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">NOVA</div><div class="product-meta" data-meta-tr="Heykelsi formu ile stilinize yeni bir boyut katar." data-meta-en="Sculptural form that adds a new dimension to your style.">Heykelsi formu ile stilinize yeni bir boyut katar.</div><span class="tag">Statement</span><button class="add-cart" type="button" data-add="NOVA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="BAIA" data-cat="everyday"><div class="product-media"><picture><source srcset="assets/products/baia.webp" type="image/webp"><img src="assets/products/baia.jpg" alt="TRƎNZA BAIA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">BAIA</div><div class="product-meta" data-meta-tr="Yumuşak büzgülü yapısı ve geniş iç hacmi ile günlük hayatı kolaylaştırır." data-meta-en="Soft drawstring structure and generous capacity for daily life.">Yumuşak büzgülü yapısı ve geniş iç hacmi ile günlük hayatı kolaylaştırır.</div><span class="tag">Everyday</span><button class="add-cart" type="button" data-add="BAIA">ÖN KAYIT SEPETİNE EKLE</button></div></article><article class="product" data-product="VITA" data-cat="shoulder"><div class="product-media"><picture><source srcset="assets/products/vita.webp" type="image/webp"><img src="assets/products/vita.jpg" alt="TRƎNZA VITA çanta" loading="lazy"></picture></div><div class="product-info"><div class="product-name">VITA</div><div class="product-meta" data-meta-tr="Kavisli hatları ve zincir askısı ile feminen, hafif ve konforlu." data-meta-en="Curved lines and chain strap — feminine, light and comfortable.">Kavisli hatları ve zincir askısı ile feminen, hafif ve konforlu.</div><span class="tag">Shoulder</span><button class="add-cart" type="button" data-add="VITA">ÖN KAYIT SEPETİNE EKLE</button></div></article></div></div></section>
+<section class="section story" id="atelier-story"><div class="wrap story-grid"><img class="story-img reveal" src="assets/size-guide.webp" alt="TRƎNZA el emeği detay" loading="lazy"><div class="reveal"><div class="kicker" data-i18n="story_kicker">The atelier</div><h2 data-i18n="story_title">ELLERDEN ÇIKAN BİR İMZA.</h2><p data-i18n="story_p">Her parça, dokunun karakterini koruyan yavaş ve özenli bir üretim anlayışıyla şekillenir. TRƎNZA için lüks; gösterişten önce malzeme, oran ve işçilikte saklıdır.</p><div class="signature">— TRƎNZA Atelier</div></div></div></section>
+<section class="section" id="details"><div class="wrap"><div class="head reveal"><div class="kicker" data-i18n="details_kicker">Why TRƎNZA</div><div class="rule"></div><h2 data-i18n="details_title">DETAYLARDA DEĞER.</h2><p data-i18n="details_desc">Her sipariş, el emeği ve seçilmiş malzemelerle paketlenir. Şıklık, dokunabildiğin bir deneyime dönüşür.</p></div><div class="details reveal"><div class="detail"><div class="icon">✦</div><h3 data-i18n="d1_title">EL EMEĞİ</h3><p data-i18n="d1_p">Her bir çanta, usta ellerin özenli işçiliğiyle üretilir.</p></div><div class="detail"><div class="icon">◌</div><h3 data-i18n="d2_title">DOĞAL MALZEME</h3><p data-i18n="d2_p">Doğal ve sürdürülebilir iplikler kullanılır.</p></div><div class="detail"><div class="icon">⟡</div><h3 data-i18n="d3_title">ZAMANSIZ TASARIM</h3><p data-i18n="d3_p">Şıklığı ve sadeliği bir arada sunar.</p></div><div class="detail"><div class="icon">⌁</div><h3 data-i18n="d4_title">ÖZENLİ PAKET</h3><p data-i18n="d4_p">Her sipariş, zarif ve güvenli şekilde hazırlanır.</p></div></div></div></section>
+<section class="section guide" id="guide"><div class="wrap guide-grid"><div class="reveal"><div class="kicker" data-i18n="guide_kicker">Size guide</div><h2 data-i18n="guide_title">FORMUN ÖLÇÜSÜ.</h2><p data-i18n="guide_p">Koleksiyondaki her model için ölçü, taşıma biçimi ve kullanım önerisini tek yerde topladık.</p><div class="note" data-i18n="guide_note">Not: Satış açılışında stok ve ölçü detayları güncellenecektir.</div></div><img class="reveal" src="assets/size-guide.jpg" alt="TRƎNZA ölçü rehberi" loading="lazy"></div></section>
 <section class="launch" id="early"><div class="launch-inner reveal"><div class="kicker" data-i18n="early_kicker">Coming Soon · Ön Kayıt</div><h2 data-i18n="early_title">İLK KOLEKSİYONU<br>İLK SEN GÖR.</h2><p data-i18n="early_desc">Satış henüz açılmadı. Üretim ve şirket kuruluşu tamamlandığında öncelikli bilgilendirme ve erken erişim için listeye katıl. Mağaza yok — doğrudan markadan.</p><form class="form" id="earlyForm"><label class="sr-only" for="earlyEmail">E-posta adresin</label><input id="earlyEmail" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="E-posta adresin" aria-label="E-posta adresin"><input class="hp-field" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"><button type="submit">Ön kayıta katıl</button></form><p class="fine" id="formStatus" role="status" aria-live="polite">Ön kayıt listesine katılmak için e-posta uygulaman açılacak. Satış başladığında öncelikli haber vereceğiz.</p></div></section>
 </main><footer class="footer"><div class="footer-inner"><div class="footer-brand">TRƎNZA</div><div data-i18n="footer_tag">HANDCRAFTED BAGS · 2026 · ÇOK YAKINDA</div><div class="footer-links"><a href="#collection">Koleksiyon</a><a href="#guide">Ölçüler</a><a href="#early">Ön Kayıt</a><a href="https://www.instagram.com/trenza.official/" target="_blank" rel="noopener">Instagram</a></div></div></footer>
-
-<div class="cart-drawer" id="cartDrawer" aria-hidden="true">
-  <div class="cart-backdrop" id="cartBackdrop"></div>
-  <aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
-    <div class="cart-head"><h2 id="cartTitle">ÖN KAYIT SEPETİ</h2><button class="icon-close" id="cartClose" type="button" aria-label="Sepeti kapat">×</button></div>
-    <div class="cart-body" id="cartBody"></div>
-    <div class="cart-foot"><p class="cart-note">Bu aşamada ödeme alınmaz. Sepet sadece ön kayıt içindir. Satış açıldığında seçtiğin modelleri öncelikli olarak tamamlayabileceksin.</p><button class="checkout-btn" id="checkoutOpen" type="button">ÖN SİPARİŞ BİLGİLERİNE GEÇ</button></div>
-  </aside>
-</div>
-<div class="checkout-modal" id="checkoutModal" aria-hidden="true">
-  <form class="checkout-card" id="checkoutForm">
-    <button type="button" class="icon-close" id="checkoutClose" aria-label="Kapat" style="float:right">×</button>
-    <h2>ÖN SİPARİŞE HAZIRLAN</h2><p>Seçtiğin modelleri kayda alalım. Satış açıldığında sana öncelikli olarak ulaşabilelim. Şu anda ödeme alınmaz.</p>
-    <div class="checkout-grid">
-      <label>Ad Soyad<input name="name" required autocomplete="name"></label>
-      <label>E-posta<input name="email" type="email" required autocomplete="email"></label>
-      <label class="checkout-full">Not / tercih<textarea name="note" placeholder="Renk, model veya teslimatla ilgili notun varsa yazabilirsin."></textarea></label>
-      <input class="hp-field" id="checkoutWebsite" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-    </div>
-    <p class="privacy">Bilgilerin yalnızca TRƎNZA ön sipariş/erken erişim talebini yönetmek için kullanılacaktır.</p>
-    <div class="checkout-actions"><button type="button" class="secondary" id="checkoutCancel">Vazgeç</button><button class="primary-dark" type="submit">TALEBİ GÖNDER</button></div>
-  </form>
-</div><div class="toast" id="toast" role="status" aria-live="polite"></div>
-
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="cart-backdrop" id="cartBackdrop"></div><aside class="cart-panel" aria-label="Ön kayıt sepeti"><div class="cart-head"><h2 id="cartTitle">ÖN KAYIT SEPETİ</h2><button class="icon-close" id="cartClose" type="button" aria-label="Sepeti kapat">×</button></div><div class="cart-body" id="cartBody"></div><div class="cart-foot"><p class="cart-note">Bu aşamada ödeme alınmaz. Sepet sadece ön kayıt içindir. Satış açıldığında seçtiğin modelleri öncelikli olarak tamamlayabileceksin.</p><button class="checkout-btn" id="checkoutOpen" type="button">ÖN SİPARİŞ BİLGİLERİNE GEÇ</button></div></aside></div>
+<div class="modal" id="checkoutModal" aria-hidden="true"><div class="modal-card"><div style="display:flex;justify-content:space-between;gap:15px;align-items:start"><div><div class="kicker">TRƎNZA</div><h2>ÖN SİPARİŞE HAZIRLAN</h2><p>Seçtiğin modelleri kayda alalım. Satış açıldığında sana öncelikli olarak ulaşabilelim. Şu anda ödeme alınmaz.</p></div><button class="icon-close" id="checkoutClose" type="button" aria-label="Kapat">×</button></div><form id="checkoutForm"><div class="modal-grid"><input name="name" type="text" required placeholder="Ad Soyad" autocomplete="name"><input name="email" type="email" required placeholder="E-posta" autocomplete="email"><textarea name="note" placeholder="Not / tercih"></textarea><input class="hp-field" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></div><div class="modal-actions"><button type="button" id="checkoutCancel">Vazgeç</button><button class="primary" type="submit">TALEBİ GÖNDER</button></div></form></div></div>
 <script src="commerce-config.js"></script>
 <script>
-(() => {
-  const nav=document.getElementById('nav');
-  const links=document.getElementById('links');
-  const menu=document.getElementById('menu');
-  const hero=document.querySelector('.hero');
-  const media=document.querySelector('.hero-media');
+(()=>{
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if(menu){
-    menu.setAttribute('aria-expanded','false');
-    menu.addEventListener('click',()=>{
-      const open=links.classList.toggle('open');
-      menu.textContent=open?'✕':'☰';
-      menu.setAttribute('aria-expanded',String(open));
-    });
-    links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-      links.classList.remove('open'); menu.textContent='☰'; menu.setAttribute('aria-expanded','false');
-    }));
-  }
-
+  const nav=document.getElementById('nav'),links=document.getElementById('links'),menu=document.getElementById('menu');
+  const closeMenu=()=>{links.classList.remove('open');menu.setAttribute('aria-expanded','false');document.body.style.overflow=''};
+  menu?.addEventListener('click',()=>{const open=links.classList.toggle('open');menu.setAttribute('aria-expanded',open?'true':'false');document.body.style.overflow=open?'hidden':'';});
+  links?.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
   const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>30);
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  const hero=document.querySelector('.hero'),heroImg=document.querySelector('.hero-media');
+  const heroLoaded=()=>{hero?.classList.add('loaded'); if(!reduce) heroImg?.classList.add('drift');};
+  if(heroImg?.complete) heroLoaded(); else heroImg?.addEventListener('load',heroLoaded,{once:true});
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  if(reduce) document.querySelectorAll('.marquee-track').forEach(el=>el.style.animation='none');
 
-  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
-    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
-  }),{threshold:.12,rootMargin:'0px 0px -5% 0px'});
-  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-  if(hero) requestAnimationFrame(()=>setTimeout(()=>hero.classList.add('loaded'),80));
-
-  if(media && !reduce && matchMedia('(pointer:fine)').matches){
-    let raf=0;
-    addEventListener('mousemove',e=>{
-      if(raf) return;
-      raf=requestAnimationFrame(()=>{
-        raf=0;
-        const x=(e.clientX/innerWidth-.5)*7, y=(e.clientY/innerHeight-.5)*4;
-        media.style.transform=`scale(1.04) translate(${x}px,${y}px)`;
-      });
-    },{passive:true});
-  }
-
-  const PRODUCTS={SCULPT:'SCULPT',WAVE:'WAVE',LUNA:'LUNA',FOLD:'FOLD',SHELL:'SHELL',ARIA:'ARIA','ÉCLAT':'ÉCLAT',NOVA:'NOVA',BAIA:'BAIA',VITA:'VITA'};
+  const cartDrawer=document.getElementById('cartDrawer'),cartBody=document.getElementById('cartBody'),cartCount=document.getElementById('cartCount'),cartBtn=document.getElementById('cartBtn'),cartClose=document.getElementById('cartClose'),cartBackdrop=document.getElementById('cartBackdrop'),checkoutOpen=document.getElementById('checkoutOpen'),checkoutModal=document.getElementById('checkoutModal'),checkoutClose=document.getElementById('checkoutClose'),checkoutCancel=document.getElementById('checkoutCancel'),checkoutForm=document.getElementById('checkoutForm'),toast=document.getElementById('toast');
   const IMG={SCULPT:'sculpt.jpg',WAVE:'wave.jpg',LUNA:'luna.jpg',FOLD:'fold.jpg',SHELL:'shell.jpg',ARIA:'aria.jpg','ÉCLAT':'eclat.jpg',NOVA:'nova.jpg',BAIA:'baia.jpg',VITA:'vita.jpg'};
-  const storageKey='trenza-preorder-cart-v1';
-  let cart=JSON.parse(localStorage.getItem(storageKey)||'{}');
-  const cartBtn=document.getElementById('cartBtn'),cartCount=document.getElementById('cartCount'),drawer=document.getElementById('cartDrawer'),cartBody=document.getElementById('cartBody'),cartClose=document.getElementById('cartClose'),cartBackdrop=document.getElementById('cartBackdrop'),checkoutOpen=document.getElementById('checkoutOpen'),checkoutModal=document.getElementById('checkoutModal'),checkoutClose=document.getElementById('checkoutClose'),checkoutCancel=document.getElementById('checkoutCancel'),checkoutForm=document.getElementById('checkoutForm'),toast=document.getElementById('toast');
-  const saveCart=()=>{localStorage.setItem(storageKey,JSON.stringify(cart));renderCart();};
+  let cart={};try{cart=JSON.parse(localStorage.getItem('trenza-cart')||'{}')}catch{}
+  const saveCart=()=>localStorage.setItem('trenza-cart',JSON.stringify(cart));
   const totalQty=()=>Object.values(cart).reduce((a,b)=>a+b,0);
-  const renderCart=()=>{const n=totalQty();cartCount.textContent=n;checkoutOpen.disabled=!n;checkoutOpen.style.opacity=n?'1':'.45';if(!n){cartBody.innerHTML='<div class="cart-empty">Sepetin henüz boş.<br>Beğendiğin modeli ön kayıt sepetine ekleyebilirsin.</div>';return;}cartBody.innerHTML=Object.entries(cart).map(([name,qty])=>`<div class="cart-item"><picture><source srcset="assets/products/${IMG[name].replace('.jpg','.webp')}" type="image/webp"><img src="assets/products/${IMG[name]}" alt="TRƎNZA ${name}"></picture><div><strong>${name}</strong><small>Ön kayıt · ödeme satış açılışında</small><div class="qty"><button type="button" data-minus="${name}" aria-label="${name} azalt">−</button><span>${qty}</span><button type="button" data-plus="${name}" aria-label="${name} artır">+</button></div><button class="remove" type="button" data-remove="${name}">Kaldır</button></div><span></span></div>`).join('');};
-
-  // ---- Focus trap / return-focus helper (used by both cart drawer & checkout modal) ----
-  let lastFocused=null;
-  const trapFocus=(container,e)=>{
-    if(e.key!=='Tab')return;
-    const focusables=container.querySelectorAll('button,[href],input:not(.hp-field),textarea,select,[tabindex]:not([tabindex="-1"])');
-    if(!focusables.length)return;
-    const first=focusables[0],last=focusables[focusables.length-1];
-    if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
-    else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
-  };
-
-  const openCart=()=>{lastFocused=document.activeElement;renderCart();drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(()=>cartClose.focus(),10);};
-  const closeCart=()=>{drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');document.body.style.overflow='';if(lastFocused)lastFocused.focus();};
-  const showToast=(t)=>{toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2200)};
-  document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.add;cart[n]=(cart[n]||0)+1;saveCart();showToast(n+' ön kayıt sepetine eklendi');}));
-  cartBody.addEventListener('click',e=>{const plus=e.target.closest('[data-plus]'),minus=e.target.closest('[data-minus]'),remove=e.target.closest('[data-remove]');if(plus){cart[plus.dataset.plus]=(cart[plus.dataset.plus]||0)+1;saveCart();}if(minus){const n=minus.dataset.minus;cart[n]=(cart[n]||0)-1;if(cart[n]<=0)delete cart[n];saveCart();}if(remove){delete cart[remove.dataset.remove];saveCart();}});
+  const showToast=(text)=>{toast.textContent=text;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),2600)};
+  const openCart=()=>{cartDrawer.classList.add('open');cartDrawer.setAttribute('aria-hidden','false');renderCart()};
+  const closeCart=()=>{cartDrawer.classList.remove('open');cartDrawer.setAttribute('aria-hidden','true')};
   cartBtn.addEventListener('click',openCart);cartClose.addEventListener('click',closeCart);cartBackdrop.addEventListener('click',closeCart);
-  drawer.addEventListener('keydown',e=>{if(e.key==='Escape'&&drawer.classList.contains('open'))closeCart();else trapFocus(drawer.querySelector('.cart-panel'),e);});
-
-  const closeCheckout=()=>{checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');if(lastFocused)lastFocused.focus();};
-  checkoutOpen.addEventListener('click',()=>{if(totalQty()){lastFocused=document.activeElement;checkoutModal.classList.add('open');checkoutModal.setAttribute('aria-hidden','false');setTimeout(()=>checkoutForm.querySelector('input[name="name"]').focus(),10);}});
-  checkoutClose.addEventListener('click',closeCheckout);checkoutCancel.addEventListener('click',closeCheckout);
-  checkoutModal.addEventListener('keydown',e=>{if(e.key==='Escape'&&checkoutModal.classList.contains('open'))closeCheckout();else trapFocus(checkoutModal.querySelector('.checkout-card'),e);});
-
-  // ---- Submission: use window.TRENZA_COMMERCE.checkoutEndpoint if configured, otherwise mailto fallback ----
+  const renderCart=()=>{const n=totalQty();cartCount.textContent=n;checkoutOpen.disabled=!n;checkoutOpen.style.opacity=n?'1':'.45';if(!n){cartBody.innerHTML='<div class="cart-empty">Sepetin henüz boş.<br>Beğendiğin modeli ön kayıt sepetine ekleyebilirsin.</div>';return;}cartBody.innerHTML=Object.entries(cart).map(([name,qty])=>`<div class="cart-item"><picture><source srcset="assets/products/${IMG[name].replace('.jpg','.webp')}" type="image/webp"><img src="assets/products/${IMG[name]}" alt="TRƎNZA ${name}"></picture><div><strong>${name}</strong><small>Ön kayıt · ödeme satış açılışında</small><div class="qty"><button type="button" data-minus="${name}" aria-label="${name} azalt">−</button><span>${qty}</span><button type="button" data-plus="${name}" aria-label="${name} artır">+</button></div><button class="remove" type="button" data-remove="${name}">Kaldır</button></div><span></span></div>`).join('');};
+  cartBody.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const n=b.dataset.plus||b.dataset.minus||b.dataset.remove;if(!n)return;if(b.dataset.plus)cart[n]=(cart[n]||0)+1;if(b.dataset.minus){cart[n]=Math.max(0,(cart[n]||0)-1);if(!cart[n])delete cart[n]}if(b.dataset.remove)delete cart[n];saveCart();renderCart()});
+  document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.add;cart[n]=(cart[n]||0)+1;saveCart();showToast(n+' ön kayıt sepetine eklendi');renderCart()}));
+  const openCheckout=()=>{if(!totalQty())return;checkoutModal.classList.add('open');checkoutModal.setAttribute('aria-hidden','false');setTimeout(()=>checkoutForm.querySelector('input[name="name"]').focus(),10)};
+  const closeCheckout=()=>{checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true')};
+  checkoutOpen.addEventListener('click',openCheckout);checkoutClose.addEventListener('click',closeCheckout);checkoutCancel.addEventListener('click',closeCheckout);
+  checkoutModal.addEventListener('keydown',e=>{if(e.key==='Escape'&&checkoutModal.classList.contains('open'))closeCheckout();});
   const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const endpointFor=(kind)=>{const c=window.TRENZA_COMMERCE||{};return c.checkoutEndpoint||null;};
-  const submitLead=async(payload,endpoint)=>{
-    if(!endpoint)return{ok:false,reason:'no-endpoint'};
-    try{
-      const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      return{ok:res.ok};
-    }catch(err){return{ok:false,reason:'network'};}
-  };
-
-  checkoutForm.addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(!totalQty())return;
-    if(checkoutForm.website && checkoutForm.website.value)return; // honeypot: bots fill hidden fields
-    const d=new FormData(checkoutForm);
-    const email=(d.get('email')||'').trim();
-    if(!EMAIL_RE.test(email)){showToast('Lütfen geçerli bir e-posta adresi gir.');return;}
-    const items=Object.entries(cart).map(([n,q])=>n+' x'+q).join(', ');
-    const payload={type:'preorder',name:d.get('name'),email,items,note:d.get('note')||'',createdAt:new Date().toISOString()};
-    localStorage.setItem('trenza-last-preorder',JSON.stringify(payload));
-    const endpoint=endpointFor('preorder');
-    const result=endpoint?await submitLead(payload,endpoint):{ok:false,reason:'no-endpoint'};
-    closeCheckout();closeCart();
-    if(result.ok){showToast('Talebin alındı. Teşekkürler!');cart={};saveCart();return;}
-    const subject=encodeURIComponent('TRƎNZA Ön Sipariş Talebi');
-    const body=encodeURIComponent('Ön sipariş talebi\n\nAd Soyad: '+payload.name+'\nE-posta: '+payload.email+'\nSeçimler: '+items+'\nNot: '+payload.note);
-    showToast('Talep hazırlandı — e-posta uygulaman açılıyor.');
-    window.location.href='mailto:hello@trenza.com.tr?subject='+subject+'&body='+body;
-  });
-
-  const form=document.getElementById('earlyForm');const status=document.getElementById('formStatus');
-  if(form){form.addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(form.website && form.website.value)return; // honeypot
-    const email=form.email.value.trim();
-    if(!EMAIL_RE.test(email)){status.textContent='Lütfen geçerli bir e-posta adresi gir.';return;}
-    const payload={type:'early-access',email,createdAt:new Date().toISOString()};
-    const endpoint=endpointFor('early');
-    const result=endpoint?await submitLead(payload,endpoint):{ok:false,reason:'no-endpoint'};
-    if(result.ok){status.textContent='Kaydın alındı. Satış açıldığında ilk sen haber alacaksın.';form.reset();return;}
-    const subject=encodeURIComponent('TRƎNZA Erken Erişim');
-    const body=encodeURIComponent('Erken erişim listesine katılmak istiyorum. E-posta: '+email);
-    status.textContent='Hazır. E-posta uygulaman açılıyor; gönder tuşuna bastığında bize ulaşacak.';
-    window.location.href='mailto:hello@trenza.com.tr?subject='+subject+'&body='+body;
-  });}
+  const endpointFor=()=>{const c=window.TRENZA_COMMERCE||{};return c.checkoutEndpoint||null};
+  const submitLead=async(payload,endpoint)=>{if(!endpoint)return{ok:false,reason:'no-endpoint'};try{const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});return{ok:res.ok}}catch(err){return{ok:false,reason:'network'}}};
+  checkoutForm.addEventListener('submit',async e=>{e.preventDefault();if(!totalQty())return;if(checkoutForm.website&&checkoutForm.website.value)return;const d=new FormData(checkoutForm),email=(d.get('email')||'').trim();if(!EMAIL_RE.test(email)){showToast('Lütfen geçerli bir e-posta adresi gir.');return}const items=Object.entries(cart).map(([n,q])=>n+' x'+q).join(', '),payload={type:'preorder',name:d.get('name'),email,items,note:d.get('note')||'',createdAt:new Date().toISOString()},endpoint=endpointFor();const result=endpoint?await submitLead(payload,endpoint):{ok:false,reason:'no-endpoint'};closeCheckout();closeCart();if(result.ok){showToast('Talebin alındı. Teşekkürler!');cart={};saveCart();return}const subject=encodeURIComponent('TRƎNZA Ön Sipariş Talebi'),body=encodeURIComponent('Ön sipariş talebi\n\nAd Soyad: '+payload.name+'\nE-posta: '+payload.email+'\nSeçimler: '+items+'\nNot: '+payload.note);showToast('Talep hazırlandı — e-posta uygulaman açılıyor.');window.location.href='mailto:hello@trenza.com.tr?subject='+subject+'&body='+body});
+  const form=document.getElementById('earlyForm'),status=document.getElementById('formStatus');
+  if(form)form.addEventListener('submit',async e=>{e.preventDefault();if(form.website&&form.website.value)return;const email=form.email.value.trim();if(!EMAIL_RE.test(email)){status.textContent='Lütfen geçerli bir e-posta adresi gir.';return}const payload={type:'early-access',email,createdAt:new Date().toISOString()},endpoint=endpointFor(),result=endpoint?await submitLead(payload,endpoint):{ok:false,reason:'no-endpoint'};if(result.ok){status.textContent='Kaydın alındı. Satış açıldığında ilk sen haber alacaksın.';form.reset();return}const subject=encodeURIComponent('TRƎNZA Erken Erişim'),body=encodeURIComponent('Erken erişim listesine katılmak istiyorum. E-posta: '+email);status.textContent='Hazır. E-posta uygulaman açılıyor; gönder tuşuna bastığında bize ulaşacak.';window.location.href='mailto:hello@trenza.com.tr?subject='+subject+'&body='+body});
   renderCart();
 })();
 
+document.querySelectorAll('.cat-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const cat=btn.dataset.cat;document.querySelectorAll('.product').forEach(p=>{if(cat==='all'||p.dataset.cat===cat)p.classList.remove('hide');else p.classList.add('hide')})})});
 
-// Category filter
-document.querySelectorAll('.cat-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.dataset.cat;
-    document.querySelectorAll('.product').forEach(p=>{
-      if(cat === 'all' || p.dataset.cat === cat) p.classList.remove('hide');
-      else p.classList.add('hide');
-    });
-  });
-});
-
-// TR / EN — full site coverage
-const translations = {
-  tr: {
-    nav_collection: 'Koleksiyon',
-    nav_atelier: 'Atelier',
-    nav_details: 'Detaylar',
-    nav_guide: 'Ölçüler',
-    nav_early: 'Ön Kayıt',
-    cart: 'Sepet',
-    add: 'ÖN KAYIT SEPETİNE EKLE',
-    hero_eyebrow: 'Coming Soon · 2026 Lansman',
-    hero_p: 'El emeğiyle şekillenen dokular. Zamansız formlar. İlk koleksiyon çok yakında — ön kayıt listesine katıl.',
-    hero_btn1: 'Koleksiyonu keşfet',
-    hero_btn2: 'Ön kayıta katıl',
-    col_kicker: 'The TRƎNZA collection',
-    col_title: 'FORM, DOKU & KARAKTER',
-    col_desc: 'Günlük kullanımdan akşam stiline uzanan, aynı sıcak ve rafine çizgide buluşan çantalar. Satış yakında.',
-    models_kicker: 'Signature models',
-    models_title: 'İLK FORMLAR',
-    models_desc: 'Her model kendi karakterine sahip; koleksiyonun tamamı tek bir TRƎNZA dünyasında birleşiyor.',
-    atelier_kicker: 'The TRƎNZA Atelier',
-    atelier_title: 'DETAY, BİR İMZA GİBİDİR.',
-    atelier_p1: 'TRƎNZA henüz satışa açılmadı. Şu an ilk koleksiyon hazırlanıyor; her çanta el emeğiyle, sınırlı adette üretilecek.',
-    atelier_p2: 'Sıcak nötr tonlar, güçlü formlar ve özenli paketleme markanın dilini oluşturuyor. Fiziksel mağaza yok — doğrudan markadan, komisyonsuz.',
-    atelier_sig: 'El emeği, zamansız şıklık. · 2026',
-    early_kicker: 'Coming Soon · Ön Kayıt',
-    early_title: 'İLK KOLEKSİYONU İLK SEN GÖR.',
-    early_desc: 'Satış henüz açılmadı. Üretim ve şirket kuruluşu tamamlandığında öncelikli bilgilendirme ve erken erişim için listeye katıl. Mağaza yok — doğrudan markadan.',
-    early_btn: 'Ön kayıta katıl',
-    early_fine: 'Ön kayıt listesine katılmak için e-posta uygulaman açılacak. Satış başladığında öncelikli haber vereceğiz.',
-    footer_tag: 'HANDCRAFTED BAGS · 2026 · ÇOK YAKINDA',
-    guide_note: 'İlk koleksiyon yetişkin modellerin yanı sıra ölçü rehberinde Mini varyantları da içerir. Kids / Mini hattı lansman sonrası ayrı olarak duyurulacak.',
-    cat_all: 'Tümü',
-    cat_signature: 'Signature',
-    cat_evening: 'Evening',
-    cat_everyday: 'Everyday',
-    cat_shoulder: 'Shoulder',
-    cat_statement: 'Statement'
-  },
-  en: {
-    nav_collection: 'Collection',
-    nav_atelier: 'Atelier',
-    nav_details: 'Details',
-    nav_guide: 'Size Guide',
-    nav_early: 'Pre-register',
-    cart: 'Cart',
-    add: 'ADD TO PRE-ORDER',
-    hero_eyebrow: 'Coming Soon · 2026 Launch',
-    hero_p: 'Textures shaped by hand. Timeless forms. The first collection is coming soon — join the pre-registration list.',
-    hero_btn1: 'Explore the collection',
-    hero_btn2: 'Join pre-register',
-    col_kicker: 'The TRƎNZA collection',
-    col_title: 'FORM, TEXTURE & CHARACTER',
-    col_desc: 'Bags that move from everyday to evening, united by the same warm and refined line. Sales opening soon.',
-    models_kicker: 'Signature models',
-    models_title: 'FIRST FORMS',
-    models_desc: 'Each model has its own character; the entire collection unites in one TRƎNZA world.',
-    atelier_kicker: 'The TRƎNZA Atelier',
-    atelier_title: 'DETAIL IS A SIGNATURE.',
-    atelier_p1: 'TRƎNZA is not on sale yet. The first collection is being prepared; every bag will be handcrafted in limited numbers.',
-    atelier_p2: 'Warm neutrals, strong forms and careful packaging form the brand language. No physical store — direct from the brand, no commissions.',
-    atelier_sig: 'Handcrafted, timeless elegance. · 2026',
-    early_kicker: 'Coming Soon · Pre-register',
-    early_title: 'SEE THE FIRST COLLECTION FIRST.',
-    early_desc: 'Sales are not open yet. Join the list for priority updates and early access once production and company setup are complete. No store — direct from the brand.',
-    early_btn: 'Join pre-register',
-    early_fine: 'Your email app will open to join the list. We will notify you first when sales begin.',
-    footer_tag: 'HANDCRAFTED BAGS · 2026 · COMING SOON',
-    guide_note: 'The first collection includes Mini variants in the size guide as well as adult models. The Kids / Mini line will be announced separately after launch.',
-    cat_all: 'All',
-    cat_signature: 'Signature',
-    cat_evening: 'Evening',
-    cat_everyday: 'Everyday',
-    cat_shoulder: 'Shoulder',
-    cat_statement: 'Statement'
-  }
+const translations={
+ tr:{nav_collection:'Koleksiyon',nav_atelier:'Atelier',nav_details:'Detaylar',nav_guide:'Ölçüler',nav_early:'Ön Kayıt',hero_eyebrow:'Coming Soon · 2026 Lansman',hero_p:'El emeğiyle şekillenen dokular. Zamansız formlar. İlk koleksiyon çok yakında — ön kayıt listesine katıl.',hero_btn1:'Koleksiyonu keşfet',hero_btn2:'Ön kayıta katıl',col_kicker:'The TRƎNZA collection',col_title:'FORM, DOKU & KARAKTER',col_desc:'Günlük kullanımdan akşam stiline uzanan, aynı sıcak ve rafine çizgide buluşan çantalar. Satış yakında.',atelier_kicker:'Signature models',atelier_title:'İLK FORMLAR',atelier_desc:'Her model kendi karakterine sahip; koleksiyonun tamamı tek bir TRƎNZA dünyasında birleşiyor.',story_kicker:'The atelier',story_title:'ELLERDEN ÇIKAN BİR İMZA.',story_p:'Her parça, dokunun karakterini koruyan yavaş ve özenli bir üretim anlayışıyla şekillenir. TRƎNZA için lüks; gösterişten önce malzeme, oran ve işçilikte saklıdır.',details_kicker:'Why TRƎNZA',details_title:'DETAYLARDA DEĞER.',details_desc:'Her sipariş, el emeği ve seçilmiş malzemelerle paketlenir. Şıklık, dokunabildiğin bir deneyime dönüşür.',d1_title:'EL EMEĞİ',d1_p:'Her bir çanta, usta ellerin özenli işçiliğiyle üretilir.',d2_title:'DOĞAL MALZEME',d2_p:'Doğal ve sürdürülebilir iplikler kullanılır.',d3_title:'ZAMANSIZ TASARIM',d3_p:'Şıklığı ve sadeliği bir arada sunar.',d4_title:'ÖZENLİ PAKET',d4_p:'Her sipariş, zarif ve güvenli şekilde hazırlanır.',guide_kicker:'Size guide',guide_title:'FORMUN ÖLÇÜSÜ.',guide_p:'Koleksiyondaki her model için ölçü, taşıma biçimi ve kullanım önerisini tek yerde topladık.',guide_note:'Not: Satış açılışında stok ve ölçü detayları güncellenecektir.',early_kicker:'Coming Soon · Ön Kayıt',early_title:'İLK KOLEKSİYONU<br>İLK SEN GÖR.',early_desc:'Satış henüz açılmadı. Üretim ve şirket kuruluşu tamamlandığında öncelikli bilgilendirme ve erken erişim için listeye katıl. Mağaza yok — doğrudan markadan.',footer_tag:'HANDCRAFTED BAGS · 2026 · ÇOK YAKINDA',marquee_text:'EL EMEĞİ · SINIRLI SERİ · ZAMANSIZ ŞIKLIK · ÇOK YAKINDA ·'},
+ en:{nav_collection:'Collection',nav_atelier:'Atelier',nav_details:'Details',nav_guide:'Size guide',nav_early:'Early access',hero_eyebrow:'Coming Soon · 2026 Launch',hero_p:'Textures shaped by hand. Timeless forms. The first collection is coming soon — join the early-access list.',hero_btn1:'Explore collection',hero_btn2:'Join early access',col_kicker:'The TRƎNZA collection',col_title:'FORM, TEXTURE & CHARACTER',col_desc:'Bags spanning everyday use to evening style, united by the same warm, refined line. Coming soon.',atelier_kicker:'Signature models',atelier_title:'FIRST FORMS',atelier_desc:'Each model has its own character; the collection comes together in one TRƎNZA world.',story_kicker:'The atelier',story_title:'A SIGNATURE MADE BY HAND.',story_p:'Each piece is shaped through a slow, careful process that preserves the character of the texture. For TRƎNZA, luxury lives in material, proportion and craftsmanship.',details_kicker:'Why TRƎNZA',details_title:'VALUE IN THE DETAILS.',details_desc:'Every order is wrapped with handcraft and selected materials. Elegance becomes an experience you can touch.',d1_title:'HANDCRAFTED',d1_p:'Each bag is made with careful craftsmanship by skilled hands.',d2_title:'NATURAL MATERIALS',d2_p:'Natural and more sustainable yarns are used.',d3_title:'TIMELESS DESIGN',d3_p:'A balance of elegance and simplicity.',d4_title:'CAREFUL PACKAGING',d4_p:'Every order is prepared with care and protection.',guide_kicker:'Size guide',guide_title:'THE MEASURE OF FORM.',guide_p:'We gathered dimensions, carry styles and usage notes for each model in one place.',guide_note:'Note: Stock and size details will be updated when sales open.',early_kicker:'Coming Soon · Early Access',early_title:'SEE THE FIRST<br>COLLECTION FIRST.',early_desc:'Sales have not opened yet. Join the list for priority updates and early access when production and company setup are complete. No store — directly from the brand.',footer_tag:'HANDCRAFTED BAGS · 2026 · COMING SOON',marquee_text:'HANDCRAFTED · LIMITED SERIES · TIMELESS ELEGANCE · COMING SOON ·'}
 };
-
-let currentLang = 'tr';
-
-function applyLanguage(lang) {
-  currentLang = lang;
-  const t = translations[lang];
-  if (!t) return;
-
-  document.querySelectorAll('#langSwitch button').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-
-  // Nav
-  const navLinks = document.querySelectorAll('#links a');
-  if (navLinks[0]) navLinks[0].textContent = t.nav_collection;
-  if (navLinks[1]) navLinks[1].textContent = t.nav_atelier;
-  if (navLinks[2]) navLinks[2].textContent = t.nav_details;
-  if (navLinks[3]) navLinks[3].textContent = t.nav_guide;
-  if (navLinks[4]) navLinks[4].textContent = t.nav_early;
-
-  // Cart — update label without destroying event listeners
-  const cartBtn = document.getElementById('cartBtn');
-  if (cartBtn) {
-    const countSpan = cartBtn.querySelector('#cartCount');
-    const count = countSpan ? countSpan.textContent : '0';
-    // Keep structure: text node + span
-    while (cartBtn.firstChild) cartBtn.removeChild(cartBtn.firstChild);
-    cartBtn.appendChild(document.createTextNode(t.cart + ' '));
-    const span = document.createElement('span');
-    span.id = 'cartCount';
-    span.textContent = count;
-    cartBtn.appendChild(span);
-  }
-
-  // Add buttons
-  document.querySelectorAll('.add-cart').forEach(btn => { btn.textContent = t.add; });
-
-  // Hero
-  const set = (sel, key) => { const el = document.querySelector(sel); if (el && t[key]) el.innerHTML = t[key]; };
-  set('.hero .eyebrow', 'hero_eyebrow');
-  set('.hero-inner p', 'hero_p');
-  const btns = document.querySelectorAll('.hero .actions .btn');
-  if (btns[0]) btns[0].textContent = t.hero_btn1;
-  if (btns[1]) btns[1].textContent = t.hero_btn2;
-
-  // Collection
-  set('#collection .kicker', 'col_kicker');
-  set('#collection h2', 'col_title');
-  set('#collection .head p', 'col_desc');
-
-  // Models
-  set('#models .kicker', 'models_kicker');
-  set('#models h2', 'models_title');
-  set('#models .head p', 'models_desc');
-
-  // Atelier
-  set('#atelier .kicker', 'atelier_kicker');
-  set('#atelier h2', 'atelier_title');
-  const atelierPs = document.querySelectorAll('#atelier p');
-  if (atelierPs[0]) atelierPs[0].textContent = t.atelier_p1;
-  if (atelierPs[1]) atelierPs[1].textContent = t.atelier_p2;
-  set('#atelier .signature', 'atelier_sig');
-
-  // Early
-  set('#early .kicker', 'early_kicker');
-  set('#early h2', 'early_title');
-  set('#early .launch-inner > p', 'early_desc');
-  const earlyBtn = document.querySelector('#earlyForm button');
-  if (earlyBtn) earlyBtn.textContent = t.early_btn;
-  set('#formStatus', 'early_fine');
-
-  // Footer
-  set('.footer-inner > div:nth-child(2)', 'footer_tag');
-  const gn = document.querySelector('.guide-note'); if (gn && t.guide_note) gn.textContent = t.guide_note;
-
-  // Categories
-  const catBtns = document.querySelectorAll('.cat-btn');
-  const catKeys = ['cat_all','cat_signature','cat_evening','cat_everyday','cat_shoulder','cat_statement'];
-  catBtns.forEach((btn, i) => { if (catKeys[i] && t[catKeys[i]]) btn.textContent = t[catKeys[i]]; });
-
-  // Product descriptions
-  document.querySelectorAll('.product-meta[data-meta-tr]').forEach(el => {
-    el.textContent = lang === 'en' ? (el.dataset.metaEn || el.dataset.metaTr) : el.dataset.metaTr;
-  });
-}
-
-const langSwitch = document.getElementById('langSwitch');
-if (langSwitch) {
-  langSwitch.addEventListener('click', function(e) {
-    const btn = e.target.closest('button[data-lang]');
-    if (!btn) return;
-    applyLanguage(btn.dataset.lang);
-  });
-}
-
+function applyLang(lang){const t=translations[lang]||translations.tr;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(t[k]!=null)el.innerHTML=t[k]});document.querySelectorAll('[data-meta-tr]').forEach(el=>{el.textContent=lang==='en'?el.dataset.metaEn:el.dataset.metaTr});document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));document.querySelectorAll('[data-marquee]').forEach(el=>{el.innerHTML=t.marquee_text.split('·').map(s=>s.trim()).filter(Boolean).map(s=>s+' <i>·</i> ').join('')});localStorage.setItem('trenza-lang',lang)}
+document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>applyLang(b.dataset.lang)));applyLang(localStorage.getItem('trenza-lang')||'tr');
 </script>
-
-</body></html>
+</body>
+</html>
