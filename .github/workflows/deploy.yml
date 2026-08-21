@@ -23,10 +23,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Restore VITA product source
+      - name: Prepare VITA asset
         run: |
-          base64 -d .trenza-assets/vita.jpg.b64 > public/assets/products/vita.jpg
+          test -s public/assets/products/vita.jpg
           cp public/assets/products/vita.jpg public/assets/products/vita-20260821.jpg
+          file public/assets/products/vita.jpg
+          file public/assets/products/vita-20260821.jpg
 
       - name: Apply final site fixes
         run: node scripts/prepare-site.mjs
