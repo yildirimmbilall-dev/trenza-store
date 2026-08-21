@@ -29,19 +29,15 @@ window.TRENZA_COMMERCE = {
       link.addEventListener('click', function (event) {
         var href = link.getAttribute('href');
         if (!href || href === '#') return;
-
         var targetId = href.slice(1);
         var target = document.getElementById(targetId);
         if (!target) return;
-
         event.preventDefault();
-
         if (window.history && window.history.pushState) {
           window.history.pushState(null, '', '#' + targetId);
         } else {
           window.location.hash = targetId;
         }
-
         var menu = document.getElementById('links');
         var menuButton = document.getElementById('menu');
         if (menu) menu.classList.remove('open');
@@ -49,14 +45,12 @@ window.TRENZA_COMMERCE = {
           menuButton.textContent = '☰';
           menuButton.setAttribute('aria-expanded', 'false');
         }
-
         requestAnimationFrame(function () {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
     });
   }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTrenzaNavigation, { once: true });
   } else {
@@ -117,7 +111,6 @@ window.TRENZA_COMMERCE = {
     `;
     document.head.appendChild(style);
   }
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mountLanguageStyles, { once: true });
   } else {
@@ -133,7 +126,6 @@ window.TRENZA_COMMERCE = {
     style.id = 'trenza-a11y-product-style';
     style.textContent = '.product:focus-visible{outline:2px solid #c2a477;outline-offset:3px}';
     document.head.appendChild(style);
-
     document.querySelectorAll('.product').forEach(function (card) {
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
@@ -161,4 +153,36 @@ window.TRENZA_COMMERCE = {
     enhanceProductKeyboardAccess();
   }
   setTimeout(enhanceProductKeyboardAccess, 700);
+})();
+
+/* TRƎNZA material claim correction. The page itself contains the TR/EN copy;
+   this post-render layer guarantees the unsupported natural-material claim is removed
+   in both languages without changing the rest of the storefront. */
+(function () {
+  function applyPremiumMaterialCopy(lang) {
+    var isEN = lang === 'en';
+    document.querySelectorAll('[data-i18n="d2_title"]').forEach(function (el) {
+      el.textContent = isEN ? 'PREMIUM CORD' : 'PREMIUM KORDON';
+    });
+    document.querySelectorAll('[data-i18n="d2_p"]').forEach(function (el) {
+      el.textContent = isEN
+        ? 'High-quality, shape-retaining premium cord yarns are used.'
+        : 'Yüksek kaliteli, şekil tutan premium kordon iplikler kullanılır.';
+    });
+  }
+  function bind() {
+    applyPremiumMaterialCopy(localStorage.getItem('trenza-lang') || 'tr');
+    document.querySelectorAll('[data-lang]').forEach(function (button) {
+      if (button.dataset.premiumCopyBound === '1') return;
+      button.dataset.premiumCopyBound = '1';
+      button.addEventListener('click', function () {
+        setTimeout(function () { applyPremiumMaterialCopy(button.dataset.lang); }, 0);
+      });
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind, { once: true });
+  } else {
+    bind();
+  }
 })();
