@@ -52,3 +52,13 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
+
+/* Keep the visible cart badge alive after the legacy language layer replaces the cart button label. */
+(function(){
+  function sync(){
+    var btn=document.getElementById('cartBtn');if(!btn)return;
+    var span=document.getElementById('cartCount');if(!span){span=document.createElement('span');span.id='cartCount';span.textContent='0';btn.appendChild(span)}
+    try{var cart=JSON.parse(localStorage.getItem('trenza-cart')||'{}');span.textContent=Object.values(cart).reduce(function(a,b){return a+Number(b||0)},0)}catch(e){span.textContent='0'}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){sync();setInterval(sync,250)},{once:true});else{sync();setInterval(sync,250)}
+})();
