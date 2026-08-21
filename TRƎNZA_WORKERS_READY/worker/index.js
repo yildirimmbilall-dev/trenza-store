@@ -32,15 +32,30 @@ export default {
       return notFound();
     }
 
-    // Serve the real hero asset from /public/assets.
-    // Do not replace hero.jpg / hero.webp with the legacy editorial SVG.
-    if (url.pathname === '/assets/hero.webp' || url.pathname === '/assets/hero.jpg') {
-      const response = await env.ASSETS.fetch(request);
-      const headers = new Headers(response.headers);
-      headers.set('cache-control', 'no-cache, must-revalidate');
-      return new Response(response.body, { status: response.status, headers });
+    const response = await env.ASSETS.fetch(request);
+    const headers = new Headers(response.headers);
+    const contentType = headers.get('content-type') || '';
+
+    // Never let the browser keep an old HTML document around. Static assets
+    // may remain cached, but the document itself must always revalidate.
+    if (url.pathname === '/' || url.pathname === '/index.html' || contentType.includes('text/html')) {
+      headers.set('cache-control', 'no-store, no-cache, must-revalidate, max-age=0');
+      headers.set('pragma', 'no-cache');
+      headers.set('expires', '0');
     }
 
-    return env.ASSETS.fetch(request);
+    // Hero assets should also revalidate because this brand is actively iterating
+    // its pre-launch creative. Other assets keep their normal static caching.
+    if (url.pathname === '/assets/hero.webp' || url.pathname === '/assets/hero.jpg') {
+      headers.set('cache-control', 'no-store, no-cache, must-revalidate, max-age=0');
+      headers.set('pragma', 'no-cache');
+      headers.set('expires', '0');
+    }
+
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers
+    });
   }
 };
