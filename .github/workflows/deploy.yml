@@ -33,11 +33,6 @@ jobs:
       - name: Apply final site fixes
         run: node scripts/prepare-site.mjs
 
-      - name: Configure Resend secret
-        run: printf '%s' "$RESEND_API_KEY" | npx wrangler secret put RESEND_API_KEY
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
