@@ -1,10 +1,11 @@
 import { json, methodNotAllowed, options, assertSameOrigin, readJson, normalizeEmail, validEmail, cleanText, honeypotTriggered, nowIso, CONSENT_VERSION } from './_utils.js';
+import { sendOwnerNotification } from './_email.js';
 
 const ALLOWED_PRODUCTS = new Set(['SCULPT','WAVE','LUNA','FOLD','SHELL','ARIA','ÉCLAT','NOVA','BAIA','VITA']);
 
 export async function onRequestOptions({ request }) { return options(request); }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, ctx }) {
   if (!assertSameOrigin(request)) return json({ ok: false, error: 'origin_not_allowed' }, 403);
   let body;
   try { body = await readJson(request); } catch (error) {
@@ -27,9 +28,7 @@ export async function onRequestPost({ request, env }) {
   for (const item of rawItems) {
     const product = String(item?.product || '');
     const quantity = Number(item?.quantity);
-    if (!ALLOWED_PRODUCTS.has(product) || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
-      return json({ ok: false, error: 'invalid_items' }, 400);
-    }
+    if (!ALLOWED_PRODUCTS.has(product) || !Number.isInteger(quantity) || quantity < 1 || quantity > 20) return json({ ok: false, error: 'invalid_items' }, 400);
     items.push({ product, quantity });
   }
 
@@ -41,7 +40,7 @@ export async function onRequestPost({ request, env }) {
       env.DB.prepare(`
         INSERT INTO preorder_requests (name, email, items_json, note, language, consent_version, consented_at, source, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, 'website-preorder', ?)
-      `).bind(name, email, JSON.stringify(items), note, language, CONSENT_VERSION, now, now),
+      `).bind(name, email, JSON.stringify(items), note, language, CONSENT_VERSION, now),
       env.DB.prepare(`
         INSERT INTO subscribers (email, language, consent_version, consented_at, source, created_at, updated_at)
         VALUES (?, ?, ?, ?, 'website-preorder', ?, ?)
@@ -50,6 +49,8 @@ export async function onRequestPost({ request, env }) {
     ];
     const results = await env.DB.batch(statements);
     const result = results?.[0];
+    if (ctx?.waitUntil) ctx.waitUntil(sendOwnerNotification(env, { kind: 'preorder', name, email, language, items, note }));
+    else await sendOwnerNotification(env, { kind: 'preorder', name, email, language, items, note });
     return json({ ok: true, submitted: true, id: result?.meta?.last_row_id || null });
   } catch (error) {
     console.error('preorder insert failed', error);
