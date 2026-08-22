@@ -3,20 +3,22 @@
 .hero{isolation:isolate}
 /* Only the two approved areas are tuned here: hero and the large editorial collection image. */
 .hero picture{position:absolute!important;inset:0!important;display:block!important;overflow:hidden!important;transform-origin:center}
-.hero picture::after{content:"";position:absolute;inset:-18%;pointer-events:none;background:linear-gradient(112deg,transparent 35%,var(--trenza-gold) 48%,transparent 61%);transform:translateX(-72%) skewX(-14deg);animation:trenzaGoldSweep 18s ease-in-out infinite;mix-blend-mode:screen;z-index:2}
-/* Hero: keep movement, but make it slow and very subtle instead of fast/aggressive. */
-.hero picture img,.hero .hero-media{transform-origin:center!important;animation:trenzaHeroDrift 30s ease-in-out infinite alternate!important}
+/* Continuous sweep: no opacity stop points, so the loop does not look choppy. */
+.hero picture::after{content:"";position:absolute;inset:-18%;pointer-events:none;background:linear-gradient(112deg,transparent 35%,var(--trenza-gold) 48%,transparent 61%);transform:translate3d(-110%,0,0) skewX(-14deg);animation:trenzaGoldSweep 24s linear infinite;mix-blend-mode:screen;z-index:2;will-change:transform}
+/* Hero movement stays alive but is now a single continuous, subtle loop. */
+.hero picture img,.hero .hero-media{transform-origin:center!important;animation:trenzaHeroDrift 34s linear infinite!important;will-change:transform}
 .editorial .tile.big picture{display:block;width:100%;height:100%;overflow:hidden;position:relative}
-.editorial .tile.big picture::after{content:"";position:absolute;inset:-30%;pointer-events:none;background:linear-gradient(112deg,transparent 40%,rgba(255,241,216,.16) 50%,transparent 60%);transform:translateX(-75%) skewX(-14deg);animation:trenzaCollectionSweep 22s ease-in-out infinite;mix-blend-mode:screen;z-index:2}
-/* Collection: restore a very gentle image movement; hover behavior stays exactly as before. */
-.editorial .tile.big img{animation:trenzaCollectionDrift 26s ease-in-out infinite alternate!important;transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .7s ease!important}
+/* Same continuous treatment for the approved large collection image only. */
+.editorial .tile.big picture::after{content:"";position:absolute;inset:-30%;pointer-events:none;background:linear-gradient(112deg,transparent 40%,rgba(255,241,216,.16) 50%,transparent 60%);transform:translate3d(-110%,0,0) skewX(-14deg);animation:trenzaCollectionSweep 28s linear infinite;mix-blend-mode:screen;z-index:2;will-change:transform}
+.editorial .tile.big img{animation:trenzaCollectionDrift 30s linear infinite!important;transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .7s ease!important;will-change:transform}
 .editorial .tile.big:hover img{transform:scale(1.035)!important;filter:none!important}
 .product-media{position:relative;overflow:hidden}
 .product-media::after{content:"";position:absolute;inset:-40% -60%;pointer-events:none;background:linear-gradient(112deg,transparent 44%,rgba(255,240,214,.22) 50%,transparent 56%);transform:translateX(-78%) skewX(-14deg);animation:trenzaCardSweep 11s ease-in-out infinite;opacity:.72}
 .product:nth-child(3n+2) .product-media::after{animation-delay:2.5s}.product:nth-child(3n) .product-media::after{animation-delay:5s}
-@keyframes trenzaHeroDrift{0%{transform:scale(1.02) translate3d(0,0,0)}50%{transform:scale(1.025) translate3d(-.18%,-.12%,0)}100%{transform:scale(1.03) translate3d(.18%,-.08%,0)}}
-@keyframes trenzaCollectionDrift{0%{transform:scale(1.01) translate3d(0,0,0)}50%{transform:scale(1.017) translate3d(.14%,0,0)}100%{transform:scale(1.024) translate3d(-.14%,-.08%,0)}}
-@keyframes trenzaGoldSweep{0%,18%{transform:translateX(-72%) skewX(-14deg);opacity:0}34%{opacity:1}56%{transform:translateX(72%) skewX(-14deg);opacity:.9}72%,100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
-@keyframes trenzaCollectionSweep{0%,20%{transform:translateX(-75%) skewX(-14deg);opacity:0}38%{opacity:.8}62%{transform:translateX(75%) skewX(-14deg);opacity:.65}100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
+/* Use matching first/last frames: no alternate-direction pause and no visible jump. */
+@keyframes trenzaHeroDrift{0%{transform:scale(1.02) translate3d(-.18%,-.08%,0)}25%{transform:scale(1.024) translate3d(-.06%,-.14%,0)}50%{transform:scale(1.028) translate3d(.12%,-.1%,0)}75%{transform:scale(1.024) translate3d(.18%,-.04%,0)}100%{transform:scale(1.02) translate3d(-.18%,-.08%,0)}}
+@keyframes trenzaCollectionDrift{0%{transform:scale(1.01) translate3d(-.12%,0,0)}25%{transform:scale(1.014) translate3d(.04%,-.05%,0)}50%{transform:scale(1.018) translate3d(.12%,-.08%,0)}75%{transform:scale(1.014) translate3d(.03%,-.04%,0)}100%{transform:scale(1.01) translate3d(-.12%,0,0)}}
+@keyframes trenzaGoldSweep{0%{transform:translate3d(-110%,0,0) skewX(-14deg)}100%{transform:translate3d(110%,0,0) skewX(-14deg)}}
+@keyframes trenzaCollectionSweep{0%{transform:translate3d(-110%,0,0) skewX(-14deg)}100%{transform:translate3d(110%,0,0) skewX(-14deg)}}
 @keyframes trenzaCardSweep{0%,66%{transform:translateX(-78%) skewX(-14deg);opacity:0}73%{opacity:.72}86%{transform:translateX(78%) skewX(-14deg);opacity:.55}100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){.hero picture::after,.editorial .tile.big picture::after,.product-media::after{animation:none!important;transform:none!important}.hero picture img,.hero .hero-media,.editorial .tile.big img{animation:none!important;transform:none!important}}
