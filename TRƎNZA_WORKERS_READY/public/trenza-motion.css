@@ -1,0 +1,20 @@
+/* TRƎNZA production motion layer */
+:root{--trenza-gold:rgba(255,236,205,.18)}
+.hero{isolation:isolate}
+.hero picture{position:absolute!important;inset:0!important;display:block!important;overflow:hidden!important;animation:trenzaHeroFloat 18s ease-in-out infinite alternate;transform-origin:center}
+.hero picture::after{content:"";position:absolute;inset:-18%;pointer-events:none;background:linear-gradient(112deg,transparent 35%,var(--trenza-gold) 48%,transparent 61%);transform:translateX(-72%) skewX(-14deg);animation:trenzaGoldSweep 8s ease-in-out infinite;mix-blend-mode:screen;z-index:2}
+.hero picture img,.hero .hero-media{animation:trenzaHeroBreath 16s ease-in-out infinite alternate!important;transform-origin:center!important}
+.editorial .tile.big picture{display:block;width:100%;height:100%;overflow:hidden;position:relative}
+.editorial .tile.big picture::after{content:"";position:absolute;inset:-30%;pointer-events:none;background:linear-gradient(112deg,transparent 40%,rgba(255,241,216,.16) 50%,transparent 60%);transform:translateX(-75%) skewX(-14deg);animation:trenzaCollectionSweep 10s ease-in-out infinite;mix-blend-mode:screen;z-index:2}
+.editorial .tile.big img{animation:trenzaEditorialDrift 14s ease-in-out infinite alternate!important;transition:transform .9s cubic-bezier(.2,.7,.2,1),filter .7s ease!important}
+.editorial .tile.big:hover img{transform:scale(1.06)!important;filter:brightness(1.05) saturate(1.08)!important}
+.product-media{position:relative;overflow:hidden}
+.product-media::after{content:"";position:absolute;inset:-40% -60%;pointer-events:none;background:linear-gradient(112deg,transparent 44%,rgba(255,240,214,.22) 50%,transparent 56%);transform:translateX(-78%) skewX(-14deg);animation:trenzaCardSweep 11s ease-in-out infinite;opacity:.72}
+.product:nth-child(3n+2) .product-media::after{animation-delay:2.5s}.product:nth-child(3n) .product-media::after{animation-delay:5s}
+@keyframes trenzaHeroFloat{from{transform:scale(1)}to{transform:scale(1.022)}}
+@keyframes trenzaHeroBreath{from{transform:scale(1.035)}to{transform:scale(1.075)}}
+@keyframes trenzaGoldSweep{0%,18%{transform:translateX(-72%) skewX(-14deg);opacity:0}34%{opacity:1}56%{transform:translateX(72%) skewX(-14deg);opacity:.9}72%,100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
+@keyframes trenzaCollectionSweep{0%,20%{transform:translateX(-75%) skewX(-14deg);opacity:0}38%{opacity:.8}62%{transform:translateX(75%) skewX(-14deg);opacity:.65}100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
+@keyframes trenzaEditorialDrift{from{transform:scale(1.025) translate3d(-.4%,0,0)}to{transform:scale(1.07) translate3d(.8%,-.6%,0)}}
+@keyframes trenzaCardSweep{0%,66%{transform:translateX(-78%) skewX(-14deg);opacity:0}73%{opacity:.72}86%{transform:translateX(78%) skewX(-14deg);opacity:.55}100%{transform:translateX(92%) skewX(-14deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.hero picture,.hero picture img,.hero .hero-media,.hero picture::after,.editorial .tile.big img,.editorial .tile.big picture::after,.product-media::after{animation:none!important;transform:none!important}}

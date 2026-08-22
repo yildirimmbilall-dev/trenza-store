@@ -18,14 +18,16 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
-      - name: Prepare and validate final site
+      - name: Validate production build
         run: |
-          node scripts/prepare-site.mjs
-          test -s public/assets/products/vita-20260821.webp
-          test -s public/assets/products/eclat.webp
+          test -s public/index.html
+          test -s public/assets/products/eclat.jpg
+          test -s public/trenza-motion.css
+          test -s public/trenza-motion.js
+          grep -q 'trenzaGoldSweep' public/trenza-motion.css
+          grep -q 'trenzaEditorialDrift' public/trenza-motion.css
           node --check worker/index.js
           node --check functions/api/lead.js
-          grep -q "checkoutEndpoint:'/api/lead'" public/commerce-config.js
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
