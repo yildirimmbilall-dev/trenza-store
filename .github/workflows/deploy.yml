@@ -1,10 +1,10 @@
 name: Deploy TRENZA
-
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
+concurrency:
+  group: trenza-production
+  cancel-in-progress: true
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,27 +12,20 @@ jobs:
       run:
         working-directory: TRƎNZA_WORKERS_READY
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm install
-
-      - name: Prepare VITA asset
+      - name: Prepare and validate final site
         run: |
-          test -s public/assets/products/vita.jpg
-          cp public/assets/products/vita.jpg public/assets/products/vita-20260821.jpg
-          file public/assets/products/vita.jpg
-          file public/assets/products/vita-20260821.jpg
-
-      - name: Apply final site fixes
-        run: node scripts/prepare-site.mjs
-
+          node scripts/prepare-site.mjs
+          test -s public/assets/products/vita-20260821.webp
+          test -s public/assets/products/eclat.webp
+          node --check worker/index.js
+          node --check functions/api/lead.js
+          grep -q "checkoutEndpoint:'/api/lead'" public/commerce-config.js
       - name: Deploy to Cloudflare Workers
         run: npx wrangler deploy
         env:
