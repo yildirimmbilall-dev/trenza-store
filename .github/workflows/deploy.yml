@@ -29,6 +29,9 @@ jobs:
           rm -rf public
           mkdir -p public
           cp -a "$SITE_DIR/." public/
+          # Cloudflare Workers deploy rejects Pages-style _headers files.
+          # The final ZIP contains one, so remove it after extraction every run.
+          rm -f public/_headers
           if [ -f "$SITE_DIR/functions/api/lead.js" ]; then
             mkdir -p functions/api
             cp "$SITE_DIR/functions/api/lead.js" functions/api/lead.js
@@ -42,6 +45,7 @@ jobs:
         run: |
           test -s public/index.html
           test -d public/assets
+          test ! -e public/_headers
           test -s public/assets/products/eclat.jpg
           test -s public/assets/products/vita.jpg || test -s public/assets/products/vita-20260821.jpg
           test -s public/assets/motion/trenza-hero-loop.mp4
